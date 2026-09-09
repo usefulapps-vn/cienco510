@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Nhân Lực Hàng Ngày Tại Công Trường - CIENCO 510</title>
+  <style>
+    :root {
+      --navy: #0B3064;
+      --navy-sub: #002D62;
+      --navy-light: #EEF3F8;
+      --red: #D32F2F;
+      --border-blue: #B0C4DE;
+      --text-dark: #111827;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #E2E8F0;
+      color: var(--text-dark);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP TOOLBAR */
+    .top-toolbar {
+      width: 1024px;
+      background: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toolbar-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-tool {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      color: #334155;
+    }
+
+    .btn-tool:hover {
+      background: #F1F5F9;
+      border-color: #94A3B8;
+    }
+
+    .btn-tool-primary {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .btn-tool-primary:hover {
+      background: #082247;
+      color: #FFFFFF;
+    }
+
+    /* MAIN REPORT SHEET - EXACT 1024 x 682 DIMENSIONS */
+    .report-sheet {
+      width: 1024px;
+      height: 682px;
+      background: #FFFFFF;
+      border: 2px solid var(--navy);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Cắt góc trên phải cho banner khớp bo viền */
+    }
+
+    /* HEADER AREA: 180px HEIGHT */
+    .header-section {
+      height: 180px;
+      display: flex;
+      border-bottom: 2px solid var(--navy);
+      background: #FFFFFF;
+      position: relative;
+    }
+
+    .header-left-col {
+      width: 594px;
+      height: 180px;
+      padding: 10px 12px 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .title-box {
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .title-main {
+      font-size: 22.5px;
+      font-weight: 900;
+      color: var(--navy-sub);
+      letter-spacing: 0.5px;
+      line-height: 1.15;
+    }
+
+    .title-sub {
+      font-size: 15.5px;
+      font-weight: 900;
+      color: var(--navy-sub);
+      letter-spacing: 1.2px;
+      margin-top: 3px;
+    }
+
+    /* KHUNG THÔNG TIN DỰ ÁN (META CARD) */
+    .meta-card {
+      border: 1px solid var(--border-blue);
+      border-radius: 6px;
+      padding: 7px 12px;
+      background: #FFFFFF;
+      font-size: 11.5px;
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      gap: 4.5px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: baseline;
+      width: 100%;
+    }
+
+    .meta-row-nha-thau {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .meta-left-col {
+      display: flex;
+      align-items: baseline;
+      flex-shrink: 0;
+    }
+
+    .meta-lbl {
+      font-weight: 700;
+      color: var(--text-dark);
+      width: 58px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .meta-colon {
+      font-weight: 700;
+      color: var(--text-dark);
+      width: 12px;
+      display: inline-block;
+      text-align: left;
+      flex-shrink: 0;
+    }
+
+    .meta-val-red {
+      color: var(--red);
+      font-weight: 700;
+      outline: none;
+    }
+
+    .meta-val-red.no-wrap {
+      white-space: nowrap;
+    }
+
+    .meta-val-red:hover, .meta-val-red:focus {
+      background-color: rgba(211, 47, 47, 0.05);
+      border-radius: 2px;
+    }
+
+    .meta-right-col {
+      display: flex;
+      align-items: baseline;
+      flex-shrink: 0;
+      gap: 4px;
+    }
+
+    /* ĐIỀU KIỆN THỜI TIẾT: NHỎ LẠI, TÁCH RỜI NHÀ THẦU */
+    .weather-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5px;
+      margin-left: 20px;
+      flex-shrink: 0;
+    }
+
+    .weather-lbl {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      white-space: nowrap;
+    }
+
+    .weather-opt {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 10px;
+      color: #1E293B;
+      white-space: nowrap;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+
+    .weather-opt:hover {
+      background: #F1F5F9;
+    }
+
+    .weather-opt.selected {
+      font-weight: 700;
+      color: var(--navy);
+      background: #EEF3F8;
+    }
+
+    .weather-opt-other {
+      font-size: 10px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .dots-input {
+      border-bottom: 1px dotted #4B5563;
+      outline: none;
+      display: inline-block;
+      min-width: 42px;
+      font-size: 10px;
+    }
+
+    /* HEADER RIGHT: BANNER ĂN THEO KHUNG VIỀN */
+    .header-right-col {
+      width: 424px;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    .header-right-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* BODY AREA */
+    .body-section {
+      padding: 10px 14px 12px 14px;
+      display: grid;
+      grid-template-columns: 485px 505px;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .body-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .sec-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TIÊU ĐỀ SECTION DẠNG VIÊN THUỐC (PILL) */
+    .section-pill {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 3px 14px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      width: fit-content;
+      user-select: none;
+    }
+
+    .btn-add-pill {
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #FFFFFF;
+      border-radius: 3px;
+      padding: 0 4px;
+      font-size: 9.5px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-add-pill:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    /* KHUNG BẢNG BIỂU ĐỒNG BỘ VIỀN BO TRÒN GIỐNG MỤC 3 */
+    .tbl-container {
+      border: 1px solid var(--border-blue);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    .tbl-clean {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      border: none;
+    }
+
+    .tbl-clean th {
+      background: var(--navy-light);
+      color: var(--navy);
+      font-weight: 800;
+      text-align: center;
+      padding: 5px 6px;
+      border-bottom: 1px solid var(--border-blue);
+      border-right: 1px solid var(--border-blue);
+      font-size: 11.5px;
+      letter-spacing: 0.2px;
+    }
+
+    .tbl-clean th:last-child {
+      border-right: none;
+    }
+
+    .tbl-clean td {
+      border-bottom: 1px solid var(--border-blue);
+      border-right: 1px solid var(--border-blue);
+      padding: 4.5px 8px;
+      vertical-align: middle;
+      color: var(--text-dark);
+      outline: none;
+    }
+
+    .tbl-clean td:last-child {
+      border-right: none;
+    }
+
+    .tbl-clean tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tbl-clean tr:hover td {
+      background-color: #F8FAFC;
+    }
+
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .text-right { text-align: right; }
+
+    /* CHỮ SỐ ĐỎ BÔI ĐẬM CHÍNH XÁC */
+    .tbl-clean td.tbl-num-red {
+      color: var(--red) !important;
+      font-weight: 800;
+      text-align: center;
+      font-size: 13.5px;
+      outline: none;
+    }
+
+    .tbl-total-row td {
+      background: #F8FAFC;
+      padding: 5px 8px;
+    }
+
+    .btn-del-row {
+      display: none;
+      color: #94A3B8;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0 4px;
+      float: right;
+    }
+
+    tr:hover .btn-del-row {
+      display: inline-block;
+    }
+
+    .btn-del-row:hover {
+      color: #EF4444;
+    }
+
+    /* SECTION 3: ĐÁNH GIÁ CARD */
+    .eval-box {
+      border: 1px solid var(--border-blue);
+      border-radius: 6px;
+      padding: 7.5px 12px;
+      background: #FFFFFF;
+      font-size: 11.5px;
+      line-height: 1.62;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5px;
+    }
+
+    .eval-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chk-opt {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+      margin-right: 12px;
+    }
+
+    .chk-icon {
+      font-size: 13.5px;
+      font-weight: bold;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .dotted-line-fill {
+      border-bottom: 1px dotted #64748B;
+      flex: 1;
+      height: 14px;
+      margin-left: 6px;
+      outline: none;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* SECTION 5: XÁC NHẬN CARD */
+    .confirm-box {
+      border: 1px solid var(--border-blue);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #FFFFFF;
+    }
+
+    .confirm-bar {
+      background: var(--navy);
+      color: #FFFFFF;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3.5px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .signer-role {
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 12.5px;
+      text-align: center;
+      margin-top: 5px;
+      outline: none;
+    }
+
+    .signer-sig-wrapper {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+    }
+
+    .signer-sig-wrapper img {
+      max-height: 48px;
+      max-width: 160px;
+      object-fit: contain;
+    }
+
+    .signer-name {
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 13.5px;
+      text-align: center;
+      margin-bottom: 5px;
+      outline: none;
+    }
+
+    /* PRINT RULES - CHUẨN 1 TRANG A4 LANDSCAPE */
+    @media print {
+      body {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .top-toolbar, .btn-del-row, .btn-add-pill {
+        display: none !important;
+      }
+
+      .report-sheet {
+        box-shadow: none !important;
+        border: 2px solid var(--navy) !important;
+        width: 1024px !important;
+        height: 682px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BẢNG ĐIỀU KHIỂN THAO TÁC -->
+  <div class="top-toolbar">
+    <div class="toolbar-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>
+      Template Báo Cáo Nhân Lực Hàng Ngày (CIENCO 510)
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn-tool btn-tool-primary" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        In / Xuất PDF (A4)
+      </button>
+      <button class="btn-tool" onclick="saveDataToJson()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        Lưu dữ liệu (.json)
+      </button>
+      <button class="btn-tool" onclick="document.getElementById('fileInput').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Nạp dữ liệu (.json)
+      </button>
+      <button class="btn-tool" onclick="resetDefault()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <polyline points="23 20 23 14 17 14"></polyline>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+        </svg>
+        Mẫu ban đầu
+      </button>
+      <input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadDataFromJson(event)">
+    </div>
+  </div>
+
+  <!-- BẢNG BÁO CÁO CHÍNH (KHỚP CHUẨN 1024 x 682) -->
+  <div class="report-sheet" id="reportSheet">
+
+    <!-- HEADER AREA -->
+    <div class="header-section">
+      <!-- CỘT TRÁI: TIÊU ĐỀ & KHUNG THÔNG TIN -->
+      <div class="header-left-col">
+        <div class="title-box">
+          <div class="title-main" contenteditable="true">BÁO CÁO NHÂN LỰC HÀNG NGÀY</div>
+          <div class="title-sub" contenteditable="true">TẠI CÔNG TRƯỜNG</div>
+        </div>
+
+        <!-- KHUNG THÔNG TIN DỰ ÁN (ĐÓNG VIỀN) -->
+        <div class="meta-card">
+          <!-- HÀNG 1: DỰ ÁN & NGÀY BÁO CÁO -->
+          <div class="meta-row">
+            <div class="meta-left-col" style="flex: 1;">
+              <span class="meta-lbl">Dự án</span>
+              <span class="meta-colon">:</span>
+              <span class="meta-val-red" contenteditable="true" id="metaDuAn">Phát triển tích hợp thích ứng - tỉnh Bình Định</span>
+            </div>
+            <div class="meta-right-col" style="margin-left: 16px;">
+              <span style="font-weight: 700; color: #111827;">Ngày báo cáo</span>
+              <span class="meta-colon">:</span>
+              <span class="meta-val-red" contenteditable="true" id="metaNgayBaoCao" oninput="syncTomorrowDate(this.innerText)">15/07/2026</span>
+            </div>
+          </div>
+
+          <!-- HÀNG 2: GÓI THẦU -->
+          <div class="meta-row">
+            <div class="meta-left-col">
+              <span class="meta-lbl">Gói thầu</span>
+              <span class="meta-colon">:</span>
+              <span class="meta-val-red" contenteditable="true" id="metaGoiThau1">BD–CW01: Đoạn đường từ quốc lộ 19C</span>
+            </div>
+          </div>
+
+          <!-- HÀNG 3: GÓI THẦU (DÒNG 2 XUỐNG DÒNG THỤT LỀ SAU DẤU HAI CHẤM) -->
+          <div class="meta-row">
+            <div class="meta-left-col">
+              <span class="meta-lbl" style="visibility: hidden;">Gói thầu</span>
+              <span class="meta-colon" style="visibility: hidden;">:</span>
+              <span class="meta-val-red" contenteditable="true" id="metaGoiThau2">kết nối cảng Quy Nhơn (Km0-Km1+159.97)</span>
+            </div>
+          </div>
+
+          <!-- HÀNG 4: NHÀ THẦU & ĐIỀU KIỆN THỜI TIẾT (TÁCH RỜI, THỜI TIẾT NHỎ GỌN) -->
+          <div class="meta-row-nha-thau">
+            <div class="meta-left-col">
+              <span class="meta-lbl">Nhà thầu</span>
+              <span class="meta-colon">:</span>
+              <span class="meta-val-red no-wrap" contenteditable="true" id="metaNhaThau">Công ty Cổ phần XDCT 510</span>
+            </div>
+            <div class="weather-box">
+              <span class="weather-lbl">Điều kiện thời tiết :</span>
+              <span class="weather-opt selected" onclick="selectWeather(this)">☀️ Nắng</span>
+              <span class="weather-opt" onclick="selectWeather(this)">🌧️ Mưa</span>
+              <span class="weather-opt" onclick="selectWeather(this)">☁️ Âm u</span>
+              <span class="weather-opt-other">Khác: <span class="dots-input" contenteditable="true" id="weatherKhac">.........</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: BANNER ĂN THEO KHUNG VIỀN TRÊN & PHẢI, KÉO XUỐNG CHỮ "c" CỦA NHÂN LỰC -->
+      <div class="header-right-col">
+        <img src="assets/banner_final_424x180.png" alt="CIENCO 510 Banner" id="bannerImg">
+      </div>
+    </div>
+
+    <!-- BODY AREA -->
+    <div class="body-section">
+
+      <!-- CỘT TRÁI: MỤC 1 & MỤC 4 -->
+      <div class="body-col body-col-left">
+        <!-- 1. THỐNG KÊ NHÂN LỰC -->
+        <div class="sec-block" id="blockSec1">
+          <div class="section-pill">
+            1. THỐNG KÊ NHÂN LỰC
+            <button class="btn-add-pill" onclick="addRowSec1()" title="Thêm dòng">+ Thêm</button>
+          </div>
+          <div class="tbl-container">
+            <table class="tbl-clean" id="tableSec1">
+              <thead>
+                <tr>
+                  <th style="width: 44px;">STT</th>
+                  <th>BỘ PHẬN / TỔ ĐỘI</th>
+                  <th style="width: 145px;">SỐ LƯỢNG (NGƯỜI)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center" contenteditable="true">1</td>
+                  <td class="text-left" contenteditable="true">Ban chỉ huy công trường <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">2</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">2</td>
+                  <td class="text-left" contenteditable="true">Đội trưởng 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">1</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">3</td>
+                  <td class="text-left" contenteditable="true">Công nhân đội 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">15</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">4</td>
+                  <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">4</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">5</td>
+                  <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">8</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">6</td>
+                  <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">7</td>
+                </tr>
+              
+                <tr>
+                  <td class="text-center" contenteditable="true">7</td>
+                  <td class="text-left" contenteditable="true">Đội phụ trợ 1</td>
+                  <td class="tbl-num-red" contenteditable="true">5</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">8</td>
+                  <td class="text-left" contenteditable="true">Đội phụ trợ 2</td>
+                  <td class="tbl-num-red" contenteditable="true">6</td>
+                </tr>
+</tbody>
+              <tfoot>
+                <tr class="tbl-total-row">
+                  <td colspan="2" class="text-center" style="color: var(--red); font-weight: 800; font-size: 13px;">TỔNG CỘNG</td>
+                  <td class="tbl-num-red" style="font-size: 15px;" id="totalSec1">37</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (LÊN SÁT KHUNG DƯỚI SỐ 1, CO GIÃN TỰ NHIÊN) -->
+        <div class="sec-block" id="blockSec4">
+          <div class="section-pill">
+            4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (<span id="tomorrowPillDate">16/07/2026</span>)
+          </div>
+          <div class="tbl-container">
+            <table class="tbl-clean" id="tableSec4">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">BỘ PHẬN / TỔ ĐỘI</th>
+                  <th style="width: 95px;">NHÂN LỰC DỰ KIẾN</th>
+                  <th style="width: 140px;">BỘ PHẬN / TỔ ĐỘI</th>
+                  <th style="width: 95px;">NHÂN LỰC DỰ KIẾN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
+                  <td class="text-left" contenteditable="true">Cơ giới</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
+                </tr>
+                <tr>
+                  <td class="text-left" contenteditable="true">Đội trưởng 22</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
+                  <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
+                </tr>
+                <tr>
+                  <td class="text-left" contenteditable="true">Công nhân đội 22</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
+                  <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
+                  <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="tbl-total-row">
+                  <td></td>
+                  <td></td>
+                  <td class="text-right" style="color: var(--red); font-weight: 800; font-size: 12px; padding-right: 12px;">TỔNG CỘNG</td>
+                  <td class="text-center tbl-num-red" style="font-size: 14.5px;" id="totalSec4">37</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: MỤC 2, MỤC 3 & MỤC 5 -->
+      <div class="body-col body-col-right">
+        <!-- 2. NHÂN LỰC THEO KHU VỰC THI CÔNG -->
+        <div class="sec-block" id="blockSec2">
+          <div class="section-pill">
+            2. NHÂN LỰC THEO KHU VỰC THI CÔNG
+            <button class="btn-add-pill" onclick="addRowSec2()" title="Thêm dòng">+ Thêm</button>
+          </div>
+          <div class="tbl-container">
+            <table class="tbl-clean" id="tableSec2">
+              <thead>
+                <tr>
+                  <th style="width: 75px;">KHU VỰC</th>
+                  <th>NỘI DUNG CÔNG VIỆC</th>
+                  <th style="width: 120px;">SỐ LƯỢNG NHÂN CÔNG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center" contenteditable="true">Mũi 1</td>
+                  <td class="text-left" contenteditable="true">Thi công cọc khoan nhồi <span style="color: var(--red); font-weight: bold;">trụ T2</span> <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">15</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">Mũi 2</td>
+                  <td class="text-left" contenteditable="true">Thi công bệ đúc dầm <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">8</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">Mũi 3</td>
+                  <td class="text-left" contenteditable="true">Thi công vết hàn cơ; gia công thép hào kỹ thuật <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">7</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC -->
+        <div class="sec-block" id="blockSec3">
+          <div class="section-pill">3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC</div>
+          <div class="eval-box">
+            <div class="eval-row">
+              <span style="font-weight: 700;">• Tổng số nhân lực hiện trường:</span>
+              <span style="color: var(--red); font-weight: 800; font-size: 13.5px; margin-left: 20px;" id="evalTotalManpower">37</span>
+              <span>người.</span>
+            </div>
+
+            <div class="eval-row">
+              <span style="font-weight: 700;">• Nhân lực đáp ứng tiến độ:</span>
+              <span style="margin-left: 20px;"></span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☑</span> Có</span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☐</span> Không</span>
+            </div>
+
+            <div class="eval-row">
+              <span style="font-weight: 700;">• Tình hình chấp hành ATLĐ:</span>
+              <span style="margin-left: 14px;"></span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☑</span> Tốt</span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Khá</span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Trung bình</span>
+              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Kém</span>
+            </div>
+
+            <div class="eval-row">
+              <span style="font-weight: 700;">• Số nhân công mới vào công trường:</span>
+              <span style="color: var(--red); font-weight: 800; margin-left: 20px;" contenteditable="true" id="evalMoiVao">00</span>
+              <span>người.</span>
+            </div>
+
+            <div class="eval-row">
+              <span style="font-weight: 700;">• Số nhân công nghỉ việc / nghỉ phép:</span>
+              <span style="color: var(--red); font-weight: 800; margin-left: 20px;" contenteditable="true" id="evalNghiViec">00</span>
+              <span>người.</span>
+            </div>
+
+            <div class="eval-row" style="margin-top: 2px;">
+              <span style="font-weight: 700; white-space: nowrap;">• Ghi chú khác:</span>
+              <span class="dotted-line-fill" contenteditable="true" id="evalGhiChu"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. XÁC NHẬN -->
+        <div class="sec-block" id="blockSec5">
+          <div class="confirm-box">
+            <div class="confirm-bar">XÁC NHẬN</div>
+            <div class="signer-role" contenteditable="true" id="signerRole">CHỈ HUY TRƯỞNG CÔNG TRƯỜNG</div>
+            <div class="signer-sig-wrapper">
+              <img src="assets/signature_sample.png" alt="Chữ ký" id="sigImg">
+            </div>
+            <div class="signer-name" contenteditable="true" id="signerName">Nguyễn Anh Tuấn</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Tính tổng mục 1 & đồng bộ sang mục 3
+    function calcSec1() {
+      const rows = document.querySelectorAll('#tableSec1 tbody tr');
+      let sum = 0;
+      rows.forEach(r => {
+        const val = parseInt(r.cells[2].innerText.trim(), 10);
+        if (!isNaN(val)) sum += val;
+      });
+      document.getElementById('totalSec1').innerText = sum;
+      document.getElementById('evalTotalManpower').innerText = sum;
+    }
+
+    // Tính tổng mục 4
+    function calcSec4() {
+      const rows = document.querySelectorAll('#tableSec4 tbody tr');
+      let sum = 0;
+      rows.forEach(r => {
+        const val1 = parseInt(r.cells[1].innerText.trim(), 10);
+        const val2 = parseInt(r.cells[3].innerText.trim(), 10);
+        if (!isNaN(val1)) sum += val1;
+        if (!isNaN(val2)) sum += val2;
+      });
+      document.getElementById('totalSec4').innerText = sum;
+    }
+
+    // Thêm dòng mục 1
+    function addRowSec1() {
+      const tbody = document.querySelector('#tableSec1 tbody');
+      const stt = tbody.rows.length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="text-center" contenteditable="true">${stt}</td>
+        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+        <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">0</td>
+      `;
+      tbody.appendChild(tr);
+      calcSec1();
+    }
+
+    // Thêm dòng mục 2
+    function addRowSec2() {
+      const tbody = document.querySelector('#tableSec2 tbody');
+      const mui = tbody.rows.length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="text-center" contenteditable="true">Mũi ${mui}</td>
+        <td class="text-left" contenteditable="true">Nội dung công việc <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+        <td class="tbl-num-red" contenteditable="true">0</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // Xóa dòng
+    function delRow(btn) {
+      const tr = btn.closest('tr');
+      const tbody = tr.parentElement;
+      tr.remove();
+      // Đánh số lại STT nếu là bảng 1
+      if (tbody.parentElement.id === 'tableSec1') {
+        Array.from(tbody.rows).forEach((r, idx) => {
+          r.cells[0].innerText = idx + 1;
+        });
+        calcSec1();
+      }
+    }
+
+    // Checkbox toggle đơn/nhóm (Radio)
+    function toggleRadio(element, groupName) {
+      const container = element.parentElement;
+      const opts = container.querySelectorAll('.chk-opt');
+      opts.forEach(opt => {
+        opt.querySelector('.chk-icon').innerText = '☐';
+      });
+      element.querySelector('.chk-icon').innerText = '☑';
+    }
+
+    // Chọn thời tiết
+    function selectWeather(element) {
+      const items = element.parentElement.querySelectorAll('.weather-opt');
+      items.forEach(it => it.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    // Đồng bộ ngày mai
+    function syncTomorrowDate(val) {
+      const parts = val.trim().split('/');
+      if (parts.length === 3) {
+        const d = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        const y = parseInt(parts[2], 10);
+        if (!isNaN(d) && !isNaN(m) && !isNaN(y)) {
+          const dateObj = new Date(y, m - 1, d);
+          dateObj.setDate(dateObj.getDate() + 1);
+          const nextD = String(dateObj.getDate()).padStart(2, '0');
+          const nextM = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const nextY = dateObj.getFullYear();
+          document.getElementById('tomorrowPillDate').innerText = `${nextD}/${nextM}/${nextY}`;
+        }
+      }
+    }
+
+    // Lưu dữ liệu ra JSON
+    function saveDataToJson() {
+      const data = {
+        duAn: document.getElementById('metaDuAn').innerText,
+        ngayBaoCao: document.getElementById('metaNgayBaoCao').innerText,
+        goiThau1: document.getElementById('metaGoiThau1').innerText,
+        goiThau2: document.getElementById('metaGoiThau2').innerText,
+        nhaThau: document.getElementById('metaNhaThau').innerText,
+        sec1Rows: [],
+        sec2Rows: [],
+        sec4Rows: [],
+        evalMoiVao: document.getElementById('evalMoiVao').innerText,
+        evalNghiViec: document.getElementById('evalNghiViec').innerText,
+        evalGhiChu: document.getElementById('evalGhiChu').innerText,
+        signerRole: document.getElementById('signerRole').innerText,
+        signerName: document.getElementById('signerName').innerText,
+      };
+
+      document.querySelectorAll('#tableSec1 tbody tr').forEach(r => {
+        data.sec1Rows.push({
+          stt: r.cells[0].innerText,
+          name: r.cells[1].childNodes[0].nodeValue.trim(),
+          qty: r.cells[2].innerText
+        });
+      });
+
+      document.querySelectorAll('#tableSec2 tbody tr').forEach(r => {
+        data.sec2Rows.push({
+          khuVuc: r.cells[0].innerText,
+          noiDung: r.cells[1].innerHTML.split('<button')[0].trim(),
+          qty: r.cells[2].innerText
+        });
+      });
+
+      document.querySelectorAll('#tableSec4 tbody tr').forEach(r => {
+        data.sec4Rows.push({
+          bp1: r.cells[0].innerText,
+          qty1: r.cells[1].innerText,
+          bp2: r.cells[2].innerText,
+          qty2: r.cells[3].innerText
+        });
+      });
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Bao_Cao_Nhan_Luc_${data.ngayBaoCao.replace(/\//g, '-')}.json`;
+      a.click();
+    }
+
+    // Nạp dữ liệu từ JSON
+    function loadDataFromJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const d = JSON.parse(e.target.result);
+          if (d.duAn) document.getElementById('metaDuAn').innerText = d.duAn;
+          if (d.ngayBaoCao) {
+            document.getElementById('metaNgayBaoCao').innerText = d.ngayBaoCao;
+            syncTomorrowDate(d.ngayBaoCao);
+          }
+          if (d.goiThau1) document.getElementById('metaGoiThau1').innerText = d.goiThau1;
+          if (d.goiThau2) document.getElementById('metaGoiThau2').innerText = d.goiThau2;
+          if (d.nhaThau) document.getElementById('metaNhaThau').innerText = d.nhaThau;
+
+          if (d.sec1Rows && d.sec1Rows.length) {
+            const tb = document.querySelector('#tableSec1 tbody');
+            tb.innerHTML = '';
+            d.sec1Rows.forEach(r => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td class="text-center" contenteditable="true">${r.stt}</td>
+                <td class="text-left" contenteditable="true">${r.name} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">${r.qty}</td>
+              `;
+              tb.appendChild(tr);
+            });
+            calcSec1();
+          }
+
+          if (d.sec2Rows && d.sec2Rows.length) {
+            const tb = document.querySelector('#tableSec2 tbody');
+            tb.innerHTML = '';
+            d.sec2Rows.forEach(r => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td class="text-center" contenteditable="true">${r.khuVuc}</td>
+                <td class="text-left" contenteditable="true">${r.noiDung} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                <td class="tbl-num-red" contenteditable="true">${r.qty}</td>
+              `;
+              tb.appendChild(tr);
+            });
+          }
+
+          if (d.sec4Rows && d.sec4Rows.length) {
+            const tb = document.querySelector('#tableSec4 tbody');
+            tb.innerHTML = '';
+            d.sec4Rows.forEach(r => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td class="text-left" contenteditable="true">${r.bp1}</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty1}</td>
+                <td class="text-left" contenteditable="true">${r.bp2}</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty2}</td>
+              `;
+              tb.appendChild(tr);
+            });
+            calcSec4();
+          }
+
+          if (d.evalMoiVao) document.getElementById('evalMoiVao').innerText = d.evalMoiVao;
+          if (d.evalNghiViec) document.getElementById('evalNghiViec').innerText = d.evalNghiViec;
+          if (d.evalGhiChu) document.getElementById('evalGhiChu').innerText = d.evalGhiChu;
+          if (d.signerRole) document.getElementById('signerRole').innerText = d.signerRole;
+          if (d.signerName) document.getElementById('signerName').innerText = d.signerName;
+
+          alert('Nạp dữ liệu thành công!');
+        } catch(err) {
+          alert('Lỗi nạp file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Reset về mặc định
+    function resetDefault() {
+      if (confirm('Bạn có muốn khôi phục về dữ liệu mẫu ban đầu không?')) {
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trình Thiết Kế Kéo Thả Báo Cáo Nhân Lực (A4 Ngang)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0B3064;
+      --primary-light: #EBF1F8;
+      --red: #B92521;
+      --border-blue: #9FB8D4;
+      --bg-canvas: #E2E8F0;
+      --toolbar-bg: #1E293B;
+      --toolbar-text: #F8FAFC;
+      --active-accent: #2563EB;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: #1E293B;
+      overflow-x: hidden;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* TOP MASTER TOOLBAR */
+    .top-toolbar {
+      background: var(--toolbar-bg);
+      color: var(--toolbar-text);
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #FFFFFF;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tool-btn {
+      background: #334155;
+      color: #F1F5F9;
+      border: 1px solid #475569;
+      border-radius: 5px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      background: #475569;
+      color: #FFFFFF;
+    }
+
+    .tool-btn-primary {
+      background: #2563EB;
+      border-color: #1D4ED8;
+      color: #FFFFFF;
+    }
+
+    .tool-btn-primary:hover {
+      background: #1D4ED8;
+    }
+
+    .tool-btn-success {
+      background: #059669;
+      border-color: #047857;
+      color: #FFFFFF;
+    }
+
+    .tool-btn-success:hover {
+      background: #047857;
+    }
+
+    .tool-btn-danger {
+      background: #DC2626;
+      border-color: #B91C1C;
+      color: #FFFFFF;
+    }
+
+    .tool-btn-danger:hover {
+      background: #B91C1C;
+    }
+
+    /* SECONDARY PROPERTY INSPECTOR BAR */
+    .inspector-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #CBD5E1;
+      padding: 6px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: #334155;
+      z-index: 999;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .inspect-section {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-right: 14px;
+      border-right: 1px solid #E2E8F0;
+    }
+
+    .inspect-section:last-child {
+      border-right: none;
+    }
+
+    .inspect-label {
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      font-size: 10.5px;
+      letter-spacing: 0.3px;
+    }
+
+    .prop-input {
+      border: 1px solid #CBD5E1;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 12px;
+      outline: none;
+      background: #F8FAFC;
+    }
+
+    .prop-input:focus {
+      border-color: var(--active-accent);
+      background: #FFFFFF;
+    }
+
+    .color-picker-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: 1px solid #CBD5E1;
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      padding: 0;
+      background: none;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 3px;
+    }
+
+    /* MAIN WORKSPACE */
+    .workspace-container {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+      position: relative;
+    }
+
+    /* A4 LANDSCAPE PAPER SHEET */
+    /* Exact A4 Landscape 297mm x 210mm at 96 DPI: 1123px x 794px */
+    .a4-sheet {
+      width: 1123px;
+      height: 794px;
+      background: #FFFFFF;
+      position: relative;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+      border: 1px solid #94A3B8;
+      border-radius: 2px;
+      overflow: hidden;
+      transform-origin: top center;
+    }
+
+    .a4-sheet.show-grid {
+      background-image: 
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* DRAGGABLE & RESIZABLE BLOCKS */
+    .design-element {
+      position: absolute;
+      box-sizing: border-box;
+      cursor: move;
+      min-width: 30px;
+      min-height: 20px;
+      user-select: text;
+    }
+
+    .design-element.selected {
+      outline: 2px dashed #2563EB !important;
+      outline-offset: 1px;
+      z-index: 500 !important;
+    }
+
+    /* RESIZE HANDLES */
+    .resize-handle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #2563EB;
+      border: 1px solid #FFFFFF;
+      border-radius: 2px;
+      display: none;
+      z-index: 501;
+    }
+
+    .design-element.selected .resize-handle {
+      display: block;
+    }
+
+    .handle-nw { top: -5px; left: -5px; cursor: nw-resize; }
+    .handle-ne { top: -5px; right: -5px; cursor: ne-resize; }
+    .handle-se { bottom: -5px; right: -5px; cursor: se-resize; }
+    .handle-sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+    .handle-n { top: -5px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
+    .handle-s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+    .handle-e { top: 50%; right: -5px; transform: translateY(-50%); cursor: e-resize; }
+    .handle-w { top: 50%; left: -5px; transform: translateY(-50%); cursor: w-resize; }
+
+    /* EDITABLE CONTENT INSIDE ELEMENTS */
+    [contenteditable="true"] {
+      outline: none;
+      cursor: text;
+    }
+
+    [contenteditable="true"]:focus {
+      background-color: rgba(37, 99, 235, 0.05);
+      border-radius: 2px;
+    }
+
+    /* COMMON REPORT STYLES */
+    .sec-pill-hdr {
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: 4px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .report-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    .report-tbl th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 800;
+      text-align: center;
+      padding: 5px 6px;
+      border: 1px solid var(--border-blue);
+      font-size: 12px;
+    }
+
+    .report-tbl td {
+      border: 1px solid var(--border-blue);
+      padding: 4px 6px;
+      vertical-align: middle;
+    }
+
+    .num-red {
+      color: var(--red);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    /* PRINT RULES: PERFECT A4 LANDSCAPE */
+    @media print {
+      body {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+
+      .top-toolbar, .inspector-bar, .resize-handle {
+        display: none !important;
+      }
+
+      .workspace-container {
+        padding: 0 !important;
+        display: block !important;
+      }
+
+      .a4-sheet {
+        width: 100% !important;
+        height: 100% !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        transform: none !important;
+      }
+
+      .design-element.selected {
+        outline: none !important;
+      }
+
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. TOP MASTER TOOLBAR -->
+  <div class="top-toolbar">
+    <div class="brand-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+      Trình Thiết Kế Báo Cáo Kéo Thả (A4 Ngang)
+    </div>
+
+    <!-- Insert Elements -->
+    <div class="btn-group">
+      <span style="font-size: 11.5px; color: #94A3B8; font-weight: 600; margin-right: 2px;">+ Chèn:</span>
+      <button class="tool-btn" onclick="addTextBox()">Ô Chữ</button>
+      <button class="tool-btn" onclick="addBorderBox()">Khung Viền</button>
+      <button class="tool-btn" onclick="addDividerLine()">Đường Kẻ</button>
+      <button class="tool-btn" onclick="addCustomTable()">Bảng Mới</button>
+      <label class="tool-btn">
+        Ảnh / Logo
+        <input type="file" accept="image/*" style="display:none" onchange="uploadNewImage(event)">
+      </label>
+    </div>
+
+    <!-- Canvas Controls -->
+    <div class="btn-group">
+      <button class="tool-btn" onclick="toggleGrid()" id="btnGrid">Lưới: BẬT</button>
+      <select class="tool-btn" id="zoomSelect" onchange="changeZoom(this.value)" style="outline:none;">
+        <option value="1">100%</option>
+        <option value="0.9" selected>90%</option>
+        <option value="0.8">80%</option>
+        <option value="0.75">75%</option>
+        <option value="1.1">110%</option>
+      </select>
+    </div>
+
+    <!-- Actions & Export -->
+    <div class="btn-group">
+      <a href="index.html" class="tool-btn" style="text-decoration:none; color:inherit;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        Trang Nhập Báo Cáo
+      </a>
+      <button class="tool-btn tool-btn-primary" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        In / Xuất PDF (A4)
+      </button>
+      <button class="tool-btn" onclick="saveLayoutJson()">Lưu Layout (.json)</button>
+      <label class="tool-btn">
+        Nạp Layout
+        <input type="file" accept=".json" style="display:none" onchange="loadLayoutJson(event)">
+      </label>
+      <button class="tool-btn tool-btn-danger" onclick="resetDefaultLayout()">Đặt Lại Mẫu</button>
+    </div>
+  </div>
+
+  <!-- 2. PROPERTY INSPECTOR BAR -->
+  <div class="inspector-bar" id="inspectorBar">
+    <!-- Border Section -->
+    <div class="inspect-section">
+      <span class="inspect-label">Đường Viền:</span>
+      <select class="prop-input" id="propBorderStyle" onchange="applyStyle('borderStyle', this.value)">
+        <option value="none">Không viền</option>
+        <option value="solid" selected>Nét liền (Solid)</option>
+        <option value="dashed">Nét đứt (Dashed)</option>
+        <option value="dotted">Nét chấm (Dotted)</option>
+        <option value="double">Nét đôi (Double)</option>
+      </select>
+      <select class="prop-input" id="propBorderWidth" onchange="applyStyle('borderWidth', this.value)">
+        <option value="0px">0px</option>
+        <option value="1px">1px</option>
+        <option value="1.5px" selected>1.5px</option>
+        <option value="2px">2px</option>
+        <option value="3px">3px</option>
+        <option value="4px">4px</option>
+      </select>
+      <div class="color-picker-wrapper" title="Màu viền">
+        <input type="color" id="propBorderColor" value="#9FB8D4" onchange="applyStyle('borderColor', this.value)">
+      </div>
+      <select class="prop-input" id="propBorderRadius" onchange="applyStyle('borderRadius', this.value)" title="Bo góc">
+        <option value="0px">Vuông (0px)</option>
+        <option value="4px">Bo nhẹ (4px)</option>
+        <option value="8px" selected>Bo vừa (8px)</option>
+        <option value="12px">Bo tròn (12px)</option>
+        <option value="20px">Bo lớn (20px)</option>
+      </select>
+    </div>
+
+    <!-- Background Section -->
+    <div class="inspect-section">
+      <span class="inspect-label">Màu Nền:</span>
+      <div class="color-picker-wrapper">
+        <input type="color" id="propBgColor" value="#FFFFFF" onchange="applyStyle('backgroundColor', this.value)">
+      </div>
+      <button class="tool-btn" style="padding: 2px 6px; font-size: 11px;" onclick="applyStyle('backgroundColor', 'transparent')">Trong suốt</button>
+      <button class="tool-btn" style="padding: 2px 6px; font-size: 11px;" onclick="applyStyle('backgroundColor', '#EBF1F8')">Xanh nhạt</button>
+      <button class="tool-btn" style="padding: 2px 6px; font-size: 11px;" onclick="applyStyle('backgroundColor', '#F8FAFC')">Xám nhạt</button>
+    </div>
+
+    <!-- Typography Section -->
+    <div class="inspect-section">
+      <span class="inspect-label">Chữ & Font:</span>
+      <select class="prop-input" id="propFontFamily" onchange="applyStyle('fontFamily', this.value)">
+        <option value="Roboto, sans-serif">Roboto</option>
+        <option value="'Be Vietnam Pro', sans-serif">Be Vietnam Pro</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+      </select>
+      <select class="prop-input" id="propFontSize" onchange="applyStyle('fontSize', this.value)">
+        <option value="11px">11px</option>
+        <option value="12px">12px</option>
+        <option value="13px" selected>13px</option>
+        <option value="14px">14px</option>
+        <option value="16px">16px</option>
+        <option value="18px">18px</option>
+        <option value="22px">22px</option>
+        <option value="26px">26px</option>
+      </select>
+      <div class="color-picker-wrapper" title="Màu chữ">
+        <input type="color" id="propTextColor" value="#0B3064" onchange="applyStyle('color', this.value)">
+      </div>
+      <button class="tool-btn" style="padding: 3px 7px; font-weight: bold;" onclick="toggleBold()">B</button>
+      <button class="tool-btn" style="padding: 3px 7px; font-style: italic;" onclick="toggleItalic()">I</button>
+      <button class="tool-btn" style="padding: 3px 7px; text-decoration: underline;" onclick="toggleUnderline()">U</button>
+      <button class="tool-btn" style="padding: 3px 7px;" onclick="applyStyle('textAlign', 'left')">⇤</button>
+      <button class="tool-btn" style="padding: 3px 7px;" onclick="applyStyle('textAlign', 'center')">⇹</button>
+      <button class="tool-btn" style="padding: 3px 7px;" onclick="applyStyle('textAlign', 'right')">⇥</button>
+    </div>
+
+    <!-- Layer & Delete Section -->
+    <div class="inspect-section">
+      <button class="tool-btn" onclick="bringToFront()" title="Đưa lên trên cùng">Lên trước</button>
+      <button class="tool-btn" onclick="sendToBack()" title="Đưa về phía sau">Về sau</button>
+      <button class="tool-btn" onclick="centerHorizontal()" title="Căn giữa trang theo chiều ngang">Căn giữa</button>
+      <button class="tool-btn tool-btn-danger" onclick="deleteSelected()" title="Xoá khối đang chọn">Xoá khối</button>
+    </div>
+  </div>
+
+  <!-- 3. WORKSPACE CONTAINER WITH A4 SHEET -->
+  <div class="workspace-container" id="workspace">
+    <div class="a4-sheet show-grid" id="canvas">
+
+      <!-- BLOCK 0: KHUNG BAO NGOÀI BÁO CÁO -->
+      <div class="design-element" id="elemOuterFrame" style="left: 12px; top: 12px; width: 1099px; height: 770px; border: 2px solid #0B3064; border-radius: 10px; background-color: transparent; pointer-events: none; z-index: 1;">
+      </div>
+
+      <!-- BLOCK 1: HEADER TRÁI (Tiêu đề + Thông tin dự án) -->
+      <div class="design-element" id="elemHeaderLeft" style="left: 28px; top: 22px; width: 660px; height: 165px; z-index: 10; padding: 4px;">
+        <div style="text-align: center; margin-bottom: 6px;">
+          <div contenteditable="true" style="font-size: 24px; font-weight: 900; color: #0B3064; letter-spacing: 0.5px; line-height: 1.2;">BÁO CÁO NHÂN LỰC HÀNG NGÀY</div>
+          <div contenteditable="true" style="font-size: 17px; font-weight: 800; color: #0B3064; letter-spacing: 1.5px; margin-top: 2px;">TẠI CÔNG TRƯỜNG</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.4;">
+          <div style="display: flex;"><strong style="color: #0B3064; width: 80px;">Dự án</strong>: <span contenteditable="true" style="color: #B92521; font-weight: 700; margin-left: 6px;">Phát triển tích hợp thích ứng - tỉnh Bình Định</span></div>
+          <div style="display: flex;"><strong style="color: #0B3064; width: 80px;">Gói thầu</strong>: <span contenteditable="true" style="color: #B92521; font-weight: 700; margin-left: 6px;">BD-CW01: Đoạn đường từ QL 19C kết nối cảng Quy Nhơn (Km0-Km1+159.97)</span></div>
+          <div style="display: grid; grid-template-columns: 1fr 220px;">
+            <div style="display: flex;"><strong style="color: #0B3064; width: 80px;">Nhà thầu</strong>: <span contenteditable="true" style="color: #B92521; font-weight: 700; margin-left: 6px;">Công ty Cổ phần XDCT 510</span></div>
+            <div style="display: flex;"><strong style="color: #0B3064; width: 95px;">Ngày báo cáo :</strong> <span contenteditable="true" style="color: #B92521; font-weight: 700; margin-left: 4px;">15/07/2026</span></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px;">
+            <strong style="color: #0B3064;">Điều kiện thời tiết :</strong>
+            <label style="cursor: pointer;"><input type="checkbox" checked> ☀️ Nắng</label>
+            <label style="cursor: pointer;"><input type="checkbox"> 🌧️ Mưa</label>
+            <label style="cursor: pointer;"><input type="checkbox"> ☁️ Âm u</label>
+            <span>Khác: <span contenteditable="true" style="display: inline-block; min-width: 80px; border-bottom: 1px dotted #64748B;">............</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2: HEADER PHẢI (Banner CIENCO 510) -->
+      <div class="design-element" id="elemBanner" style="left: 700px; top: 22px; width: 395px; height: 155px; border: 1.5px solid #9FB8D4; border-radius: 8px; overflow: hidden; background: #FFFFFF; z-index: 10;">
+        <img src="assets/banner_cienco510.png" style="width: 100%; height: 100%; object-fit: fill;" alt="Banner">
+      </div>
+
+      <!-- BLOCK 3: ĐƯỜNG PHÂN CÁCH HEADER VÀ BODY -->
+      <div class="design-element" id="elemSepLine" style="left: 24px; top: 194px; width: 1075px; height: 2px; background-color: #9FB8D4; z-index: 5;"></div>
+
+      <!-- BLOCK 4: PHẦN 1. THỐNG KÊ NHÂN LỰC -->
+      <div class="design-element" id="elemSec1" style="left: 28px; top: 206px; width: 515px; height: 280px; z-index: 15;">
+        <div class="sec-pill-hdr">1. THỐNG KÊ NHÂN LỰC</div>
+        <table class="report-tbl">
+          <thead>
+            <tr>
+              <th style="width: 45px;">STT</th>
+              <th>BỘ PHẬN / TỔ ĐỘI</th>
+              <th style="width: 130px;">SỐ LƯỢNG (NGƯỜI)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align: center;">1</td><td contenteditable="true">Ban chỉ huy công trường</td><td class="num-red" contenteditable="true">2</td></tr>
+            <tr><td style="text-align: center;">2</td><td contenteditable="true">Đội trưởng 22</td><td class="num-red" contenteditable="true">1</td></tr>
+            <tr><td style="text-align: center;">3</td><td contenteditable="true">Công nhân đội 22</td><td class="num-red" contenteditable="true">15</td></tr>
+            <tr><td style="text-align: center;">4</td><td contenteditable="true">Cơ giới</td><td class="num-red" contenteditable="true">4</td></tr>
+            <tr><td style="text-align: center;">5</td><td contenteditable="true">Công ty Hà Thành</td><td class="num-red" contenteditable="true">8</td></tr>
+            <tr><td style="text-align: center;">6</td><td contenteditable="true">Công ty Tấn Thành</td><td class="num-red" contenteditable="true">7</td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="background: #F8FAFC; font-weight: 800;">
+              <td colspan="2" style="text-align: center; color: #0B3064; font-size: 13px;">TỔNG CỘNG</td>
+              <td class="num-red" style="font-size: 16px;" contenteditable="true">37</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- BLOCK 5: PHẦN 4. KẾ HOẠCH NHÂN LỰC NGÀY MAI -->
+      <div class="design-element" id="elemSec4" style="left: 28px; top: 500px; width: 515px; height: 260px; z-index: 15;">
+        <div class="sec-pill-hdr">4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (16/07/2026)</div>
+        <table class="report-tbl">
+          <thead>
+            <tr>
+              <th>BỘ PHẬN / TỔ ĐỘI</th>
+              <th style="width: 85px;">NHÂN LỰC</th>
+              <th>BỘ PHẬN / TỔ ĐỘI</th>
+              <th style="width: 85px;">NHÂN LỰC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td contenteditable="true">Ban chỉ huy công trường</td><td class="num-red" contenteditable="true">2</td><td contenteditable="true">Cơ giới</td><td class="num-red" contenteditable="true">4</td></tr>
+            <tr><td contenteditable="true">Đội trưởng 22</td><td class="num-red" contenteditable="true">1</td><td contenteditable="true">Công ty Hà Thành</td><td class="num-red" contenteditable="true">8</td></tr>
+            <tr><td contenteditable="true">Công nhân đội 22</td><td class="num-red" contenteditable="true">15</td><td contenteditable="true">Công ty Tấn Thành</td><td class="num-red" contenteditable="true">7</td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="background: #F8FAFC; font-weight: 800;">
+              <td colspan="3" style="text-align: right; color: #B92521; padding-right: 12px;">TỔNG CỘNG</td>
+              <td class="num-red" style="font-size: 16px;" contenteditable="true">37</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- BLOCK 6: PHẦN 2. NHÂN LỰC THEO KHU VỰC THI CÔNG -->
+      <div class="design-element" id="elemSec2" style="left: 558px; top: 206px; width: 537px; height: 155px; z-index: 15;">
+        <div class="sec-pill-hdr">2. NHÂN LỰC THEO KHU VỰC THI CÔNG</div>
+        <table class="report-tbl">
+          <thead>
+            <tr>
+              <th style="width: 75px;">KHU VỰC</th>
+              <th>NỘI DUNG CÔNG VIỆC</th>
+              <th style="width: 90px;">SỐ LƯỢNG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align: center; font-weight: 700;" contenteditable="true">Mũi 1</td><td contenteditable="true">Thi công cọc khoan nhồi <span style="color:#B92521">trụ T2</span></td><td class="num-red" contenteditable="true">15</td></tr>
+            <tr><td style="text-align: center; font-weight: 700;" contenteditable="true">Mũi 2</td><td contenteditable="true">Thi công bệ đúc dầm</td><td class="num-red" contenteditable="true">8</td></tr>
+            <tr><td style="text-align: center; font-weight: 700;" contenteditable="true">Mũi 3</td><td contenteditable="true">Thi công vết hàn cơ; gia công thép hào kỹ thuật</td><td class="num-red" contenteditable="true">7</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- BLOCK 7: PHẦN 3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC -->
+      <div class="design-element" id="elemSec3" style="left: 558px; top: 372px; width: 537px; height: 215px; z-index: 15; border: 1.5px solid #9FB8D4; border-radius: 8px; background: #FFFFFF; padding: 10px 14px;">
+        <div style="background: #0B3064; color: #FFFFFF; padding: 3px 10px; border-radius: 4px; font-size: 12.5px; font-weight: 800; margin: -10px -14px 8px -14px; text-transform: uppercase;">3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC</div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 1.55;">
+          <div>• Tổng số nhân lực hiện trường: <strong style="color: #B92521; font-size: 15px;" contenteditable="true">37</strong> người.</div>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span>• Nhân lực đáp ứng tiến độ:</span>
+            <label style="cursor: pointer;"><input type="checkbox" checked> Có</label>
+            <label style="cursor: pointer;"><input type="checkbox"> Không</label>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span>• Tình hình chấp hành ATLĐ:</span>
+            <label style="cursor: pointer;"><input type="checkbox" checked> Tốt</label>
+            <label style="cursor: pointer;"><input type="checkbox"> Khá</label>
+            <label style="cursor: pointer;"><input type="checkbox"> Trung bình</label>
+            <label style="cursor: pointer;"><input type="checkbox"> Kém</label>
+          </div>
+          <div>• Số nhân công mới vào công trường: <span contenteditable="true" style="color: #B92521; font-weight: 800;">00</span> người.</div>
+          <div>• Số nhân công nghỉ việc / nghỉ phép: <span contenteditable="true" style="color: #B92521; font-weight: 800;">00</span> người.</div>
+          <div style="display: flex;">• Ghi chú khác: <span contenteditable="true" style="flex-grow: 1; border-bottom: 1px dotted #94A3B8; margin-left: 4px;">....................................................................................</span></div>
+        </div>
+      </div>
+
+      <!-- BLOCK 8: PHẦN 5. XÁC NHẬN CHỈ HUY TRƯỞNG -->
+      <div class="design-element" id="elemSec5" style="left: 558px; top: 600px; width: 537px; height: 160px; z-index: 15; border: 1.5px solid #9FB8D4; border-radius: 8px; background: #FFFFFF; overflow: hidden; display: flex; flex-direction: column; align-items: center;">
+        <div style="background: #0B3064; color: #FFFFFF; width: 100%; text-align: center; font-size: 12.5px; font-weight: 800; padding: 4px 0;">XÁC NHẬN</div>
+        <div contenteditable="true" style="color: #0B3064; font-weight: 800; font-size: 13.5px; margin-top: 6px;">CHỈ HUY TRƯỞNG CÔNG TRƯỜNG</div>
+        <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
+          <img src="assets/signature_sample.png" style="max-height: 52px; max-width: 160px;" alt="Chữ ký">
+        </div>
+        <div contenteditable="true" style="color: #0B3064; font-weight: 800; font-size: 14px; margin-bottom: 6px;">Nguyễn Anh Tuấn</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT ENGINE: DRAG, DROP, RESIZE, STYLE INSPECTOR -->
+  <script>
+    const canvas = document.getElementById('canvas');
+    let selectedElement = null;
+    let isDragging = false;
+    let isResizing = false;
+    let resizeDir = null;
+    let startX = 0, startY = 0;
+    let initialLeft = 0, initialTop = 0, initialWidth = 0, initialHeight = 0;
+    let currentZoom = 0.9;
+
+    // Attach resize handles to an element
+    function attachHandles(el) {
+      const handles = ['nw', 'ne', 'se', 'sw', 'n', 's', 'e', 'w'];
+      handles.forEach(dir => {
+        const h = document.createElement('div');
+        h.className = `resize-handle handle-${dir}`;
+        h.dataset.dir = dir;
+        h.addEventListener('mousedown', initResize);
+        el.appendChild(h);
+      });
+    }
+
+    // Initialize all existing elements
+    function initAllElements() {
+      const elements = document.querySelectorAll('.design-element');
+      elements.forEach(el => {
+        if (!el.querySelector('.resize-handle')) {
+          attachHandles(el);
+        }
+        el.addEventListener('mousedown', initDrag);
+      });
+    }
+
+    // Select Element
+    function selectElement(el) {
+      if (selectedElement) {
+        selectedElement.classList.remove('selected');
+      }
+      selectedElement = el;
+      if (el) {
+        el.classList.add('selected');
+        updateInspectorValues(el);
+      }
+    }
+
+    // Mouse Down on Canvas (Deselect if clicked on canvas background)
+    canvas.addEventListener('mousedown', (e) => {
+      if (e.target === canvas) {
+        selectElement(null);
+      }
+    });
+
+    // Drag Initialization
+    function initDrag(e) {
+      if (e.target.classList.contains('resize-handle')) return;
+      if (e.target.isContentEditable && document.activeElement === e.target) return;
+
+      const el = e.currentTarget;
+      selectElement(el);
+
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      initialLeft = parseFloat(el.style.left) || 0;
+      initialTop = parseFloat(el.style.top) || 0;
+
+      window.addEventListener('mousemove', doDrag);
+      window.addEventListener('mouseup', stopDrag);
+      e.stopPropagation();
+    }
+
+    function doDrag(e) {
+      if (!isDragging || !selectedElement) return;
+      const dx = (e.clientX - startX) / currentZoom;
+      const dy = (e.clientY - startY) / currentZoom;
+
+      let newLeft = Math.round((initialLeft + dx) / 5) * 5; // Snap 5px
+      let newTop = Math.round((initialTop + dy) / 5) * 5;
+
+      // Keep within canvas
+      newLeft = Math.max(0, Math.min(newLeft, 1123 - selectedElement.offsetWidth));
+      newTop = Math.max(0, Math.min(newTop, 794 - selectedElement.offsetHeight));
+
+      selectedElement.style.left = newLeft + 'px';
+      selectedElement.style.top = newTop + 'px';
+    }
+
+    function stopDrag() {
+      isDragging = false;
+      window.removeEventListener('mousemove', doDrag);
+      window.removeEventListener('mouseup', stopDrag);
+    }
+
+    // Resize Initialization
+    function initResize(e) {
+      e.stopPropagation();
+      isResizing = true;
+      resizeDir = e.target.dataset.dir;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      const el = selectedElement;
+      initialLeft = parseFloat(el.style.left) || 0;
+      initialTop = parseFloat(el.style.top) || 0;
+      initialWidth = el.offsetWidth;
+      initialHeight = el.offsetHeight;
+
+      window.addEventListener('mousemove', doResize);
+      window.addEventListener('mouseup', stopResize);
+    }
+
+    function doResize(e) {
+      if (!isResizing || !selectedElement) return;
+      const dx = (e.clientX - startX) / currentZoom;
+      const dy = (e.clientY - startY) / currentZoom;
+      const el = selectedElement;
+
+      let w = initialWidth;
+      let h = initialHeight;
+      let l = initialLeft;
+      let t = initialTop;
+
+      if (resizeDir.includes('e')) w = Math.max(40, initialWidth + dx);
+      if (resizeDir.includes('s')) h = Math.max(30, initialHeight + dy);
+      if (resizeDir.includes('w')) {
+        const potentialW = initialWidth - dx;
+        if (potentialW > 40) {
+          w = potentialW;
+          l = initialLeft + dx;
+        }
+      }
+      if (resizeDir.includes('n')) {
+        const potentialH = initialHeight - dy;
+        if (potentialH > 30) {
+          h = potentialH;
+          t = initialTop + dy;
+        }
+      }
+
+      el.style.width = Math.round(w) + 'px';
+      el.style.height = Math.round(h) + 'px';
+      el.style.left = Math.round(l) + 'px';
+      el.style.top = Math.round(t) + 'px';
+    }
+
+    function stopResize() {
+      isResizing = false;
+      window.removeEventListener('mousemove', doResize);
+      window.removeEventListener('mouseup', stopResize);
+    }
+
+    // Update Inspector inputs to reflect selected element's styles
+    function updateInspectorValues(el) {
+      const comp = window.getComputedStyle(el);
+
+      document.getElementById('propBorderStyle').value = el.style.borderStyle || comp.borderStyle || 'none';
+      document.getElementById('propBorderWidth').value = el.style.borderWidth || comp.borderWidth || '0px';
+      document.getElementById('propBorderRadius').value = el.style.borderRadius || comp.borderRadius || '0px';
+
+      // Colors
+      const bColor = rgbToHex(comp.borderColor);
+      if (bColor) document.getElementById('propBorderColor').value = bColor;
+
+      const bgColor = rgbToHex(comp.backgroundColor);
+      if (bgColor) document.getElementById('propBgColor').value = bgColor;
+
+      const tColor = rgbToHex(comp.color);
+      if (tColor) document.getElementById('propTextColor').value = tColor;
+
+      document.getElementById('propFontSize').value = el.style.fontSize || comp.fontSize || '13px';
+    }
+
+    function rgbToHex(rgb) {
+      if (!rgb || rgb === 'transparent' || rgb.startsWith('rgba(0, 0, 0, 0)')) return null;
+      const m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+      if (!m) return null;
+      return "#" + ("0" + parseInt(m[1],10).toString(16)).slice(-2) +
+                   ("0" + parseInt(m[2],10).toString(16)).slice(-2) +
+                   ("0" + parseInt(m[3],10).toString(16)).slice(-2);
+    }
+
+    // Apply styles from inspector
+    function applyStyle(prop, val) {
+      if (!selectedElement) {
+        alert("Vui lòng nhấp chọn một khối trên trang để định dạng!");
+        return;
+      }
+      selectedElement.style[prop] = val;
+    }
+
+    function toggleBold() {
+      if (!selectedElement) return;
+      selectedElement.style.fontWeight = (selectedElement.style.fontWeight === 'bold' || selectedElement.style.fontWeight >= '700') ? 'normal' : 'bold';
+    }
+
+    function toggleItalic() {
+      if (!selectedElement) return;
+      selectedElement.style.fontStyle = (selectedElement.style.fontStyle === 'italic') ? 'normal' : 'italic';
+    }
+
+    function toggleUnderline() {
+      if (!selectedElement) return;
+      selectedElement.style.textDecoration = (selectedElement.style.textDecoration === 'underline') ? 'none' : 'underline';
+    }
+
+    // Layering
+    function bringToFront() {
+      if (!selectedElement) return;
+      let maxZ = 10;
+      document.querySelectorAll('.design-element').forEach(el => {
+        const z = parseInt(el.style.zIndex) || 1;
+        if (z > maxZ) maxZ = z;
+      });
+      selectedElement.style.zIndex = maxZ + 1;
+    }
+
+    function sendToBack() {
+      if (!selectedElement) return;
+      selectedElement.style.zIndex = 2;
+    }
+
+    function centerHorizontal() {
+      if (!selectedElement) return;
+      const w = selectedElement.offsetWidth;
+      selectedElement.style.left = Math.round((1123 - w) / 2) + 'px';
+    }
+
+    function deleteSelected() {
+      if (!selectedElement) return;
+      if (confirm("Bạn có chắc muốn xóa khối này không?")) {
+        selectedElement.remove();
+        selectedElement = null;
+      }
+    }
+
+    // Add New Elements
+    function createGenericElement(htmlContent, width, height, customStyles = {}) {
+      const el = document.createElement('div');
+      el.className = 'design-element';
+      el.style.left = '300px';
+      el.style.top = '250px';
+      el.style.width = width + 'px';
+      el.style.height = height + 'px';
+      el.style.zIndex = '50';
+
+      for (let k in customStyles) {
+        el.style[k] = customStyles[k];
+      }
+
+      el.innerHTML = htmlContent;
+      attachHandles(el);
+      el.addEventListener('mousedown', initDrag);
+      canvas.appendChild(el);
+      selectElement(el);
+      return el;
+    }
+
+    function addTextBox() {
+      createGenericElement('<div contenteditable="true" style="width: 100%; height: 100%; padding: 4px; font-size: 14px; font-weight: 600; color: #0B3064;">Nhấp đúp để soạn nội dung văn bản mới...</div>', 260, 60, {
+        border: '1px dashed #9FB8D4',
+        borderRadius: '4px',
+        backgroundColor: '#FFFFFF'
+      });
+    }
+
+    function addBorderBox() {
+      createGenericElement('<div style="width: 100%; height: 100%; padding: 8px;"><span contenteditable="true" style="font-size: 11px; color: #64748B; font-style: italic;">Khung nhóm nội dung tùy chọn</span></div>', 320, 140, {
+        border: '1.5px solid #0B3064',
+        borderRadius: '6px',
+        backgroundColor: 'transparent'
+      });
+    }
+
+    function addDividerLine() {
+      createGenericElement('', 400, 3, {
+        backgroundColor: '#0B3064',
+        border: 'none'
+      });
+    }
+
+    function addCustomTable() {
+      const tblHtml = `
+        <table class="report-tbl" style="width: 100%; height: 100%;">
+          <thead>
+            <tr><th contenteditable="true">Cột 1</th><th contenteditable="true">Cột 2</th><th contenteditable="true">Số lượng</th></tr>
+          </thead>
+          <tbody>
+            <tr><td contenteditable="true">Hạng mục A</td><td contenteditable="true">Chi tiết A</td><td class="num-red" contenteditable="true">10</td></tr>
+            <tr><td contenteditable="true">Hạng mục B</td><td contenteditable="true">Chi tiết B</td><td class="num-red" contenteditable="true">15</td></tr>
+          </tbody>
+        </table>
+      `;
+      createGenericElement(tblHtml, 340, 110, {
+        backgroundColor: '#FFFFFF',
+        border: '1px solid #9FB8D4',
+        borderRadius: '4px'
+      });
+    }
+
+    function uploadNewImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        createGenericElement(`<img src="${e.target.result}" style="width:100%; height:100%; object-fit:contain;" alt="Uploaded Image">`, 200, 100, {
+          border: '1px dashed #CBD5E1',
+          borderRadius: '4px',
+          backgroundColor: '#FFFFFF'
+        });
+      };
+      reader.readAsDataURL(file);
+      event.target.value = "";
+    }
+
+    // Grid Toggle
+    function toggleGrid() {
+      const hasGrid = canvas.classList.toggle('show-grid');
+      document.getElementById('btnGrid').innerText = hasGrid ? "Lưới: BẬT" : "Lưới: TẮT";
+    }
+
+    // Zoom
+    function changeZoom(val) {
+      currentZoom = parseFloat(val);
+      canvas.style.transform = `scale(${currentZoom})`;
+    }
+
+    // Save & Load Layout JSON
+    function saveLayoutJson() {
+      const elements = [];
+      document.querySelectorAll('.design-element').forEach(el => {
+        // Clone and strip handles before saving HTML
+        const clone = el.cloneNode(true);
+        clone.querySelectorAll('.resize-handle').forEach(h => h.remove());
+
+        elements.push({
+          id: el.id || ('elem_' + Math.random().toString(36).substr(2, 9)),
+          left: el.style.left,
+          top: el.style.top,
+          width: el.style.width,
+          height: el.style.height,
+          zIndex: el.style.zIndex,
+          border: el.style.border,
+          borderStyle: el.style.borderStyle,
+          borderWidth: el.style.borderWidth,
+          borderColor: el.style.borderColor,
+          borderRadius: el.style.borderRadius,
+          backgroundColor: el.style.backgroundColor,
+          color: el.style.color,
+          fontSize: el.style.fontSize,
+          fontFamily: el.style.fontFamily,
+          fontWeight: el.style.fontWeight,
+          fontStyle: el.style.fontStyle,
+          textDecoration: el.style.textDecoration,
+          textAlign: el.style.textAlign,
+          padding: el.style.padding,
+          overflow: el.style.overflow,
+          html: clone.innerHTML
+        });
+      });
+
+      const layoutData = {
+        version: "1.0",
+        timestamp: new Date().toISOString(),
+        elements: elements
+      };
+
+      const blob = new Blob([JSON.stringify(layoutData, null, 2)], { type: "application/json" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "Thiet_Ke_Bao_Cao_A4.json";
+      a.click();
+    }
+
+    function loadLayoutJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!data.elements) throw new Error("Cấu trúc file không đúng!");
+
+          canvas.innerHTML = '';
+          data.elements.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'design-element';
+            el.id = item.id;
+            el.style.left = item.left;
+            el.style.top = item.top;
+            el.style.width = item.width;
+            el.style.height = item.height;
+            el.style.zIndex = item.zIndex || '10';
+
+            const styleProps = ['border', 'borderStyle', 'borderWidth', 'borderColor', 'borderRadius', 'backgroundColor', 'color', 'fontSize', 'fontFamily', 'fontWeight', 'fontStyle', 'textDecoration', 'textAlign', 'padding', 'overflow'];
+            styleProps.forEach(p => {
+              if (item[p]) el.style[p] = item[p];
+            });
+
+            el.innerHTML = item.html;
+            attachHandles(el);
+            el.addEventListener('mousedown', initDrag);
+            canvas.appendChild(el);
+          });
+
+          selectElement(null);
+          alert("Đã nạp thành công bản thiết kế!");
+        } catch (err) {
+          alert("Lỗi đọc file layout: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function resetDefaultLayout() {
+      if (confirm("Khôi phục lại toàn bộ vị trí và cấu trúc mẫu mặc định ban đầu?")) {
+        location.reload();
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initAllElements();
+      changeZoom(0.9);
+    });
+  </script>
+</body>
+</html>
