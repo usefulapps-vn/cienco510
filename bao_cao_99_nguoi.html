@@ -516,10 +516,40 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       color: #FFFFFF;
     }
 
+    .scale-selector-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .scale-label {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    .scale-select {
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--navy);
+      outline: none;
+      cursor: pointer;
+    }
+
     /* MAIN REPORT SHEET - EXACT 1024 x 682 DIMENSIONS */
     .report-sheet {
       width: 1024px;
-      height: 682px;
+      min-height: 682px;
+      height: auto;
       background: #FFFFFF;
       border: 2px solid var(--navy);
       border-radius: 8px;
@@ -1606,6 +1636,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         <span id="modeIcon">📱</span>
         <span id="modeText">Smartphone</span>
       </button>
+      <div class="scale-selector-wrap" title="Tỷ lệ co giãn viền an toàn khi xuất ảnh / PDF (Tránh bị cắt mất chữ trên / dưới)">
+        <span class="scale-label">📐 Co giãn:</span>
+        <select id="exportScaleSelect" class="scale-select" onchange="window.currentExportScale = parseFloat(this.value)">
+          <option value="0.95" selected>0.95 (Chuẩn đẹp)</option>
+          <option value="0.92">0.92 (Rộng rãi)</option>
+          <option value="0.90">0.90 (Nhiều dòng)</option>
+          <option value="1.0">1.00 (Sát viền)</option>
+        </select>
+      </div>
       <button class="btn-tool btn-tool-primary" onclick="exportPDF()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -2020,6 +2059,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       }
     }
 
+    // Biến lưu tỷ lệ co giãn xuất ảnh / PDF (Mặc định 0.95 theo yêu cầu)
+    window.currentExportScale = 0.95;
+
     // In / Xuất hình ảnh PNG sắc nét (Chuẩn chia sẻ Zalo / Telegram / Báo cáo)
     // Xuất hình ảnh PNG (Tối ưu cho cả Mobile/WebApp và Desktop)
     // Xuất file PDF chuẩn A4 (Sạch 100% không dính dòng cảnh báo của Google)
@@ -2032,11 +2074,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         document.body.classList.remove('mode-smartphone');
       }
 
-      // Tạm ẩn các nút thêm/xóa dòng khi chụp xuất PDF
+      // 1. Lưu lại tọa độ cuộn và cuộn về đầu trang (0,0) tránh bị lệch / mất chữ trên
+      const prevScrollX = window.scrollX;
+      const prevScrollY = window.scrollY;
+      window.scrollTo(0, 0);
+
+      // 2. Tạm ẩn các nút thêm/xóa dòng khi chụp xuất PDF
       const hiddenBtns = document.querySelectorAll('.btn-add-pill, .btn-del-row');
       hiddenBtns.forEach(b => b.style.display = 'none');
 
-      await new Promise(r => setTimeout(r, 60));
+      // 3. Đảm bảo khung báo cáo hiển thị trọn vẹn, không bị cắt xén phía dưới
+      const prevHeight = sheet.style.height;
+      const prevOverflow = sheet.style.overflow;
+      sheet.style.height = 'auto';
+      sheet.style.minHeight = '682px';
+      sheet.style.overflow = 'visible';
+
+      await new Promise(r => setTimeout(r, 70));
 
       try {
         if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
@@ -2049,10 +2103,26 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           scale: 2, // 2x Retina cực nét
           useCORS: true,
           backgroundColor: '#FFFFFF',
-          windowWidth: 1100
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: document.documentElement.offsetWidth,
+          windowHeight: document.documentElement.offsetHeight
         });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+        // 4. Áp dụng tỷ lệ co giãn (mặc định 0.95) để tạo viền an toàn không bị mất chữ trên/dưới
+        const scaleFactor = window.currentExportScale || 0.95;
+        const outCanvas = document.createElement('canvas');
+        outCanvas.width = Math.round(canvas.width / scaleFactor);
+        outCanvas.height = Math.round(canvas.height / scaleFactor);
+        const ctx = outCanvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, outCanvas.width, outCanvas.height);
+
+        const offsetX = Math.round((outCanvas.width - canvas.width) / 2);
+        const offsetY = Math.round((outCanvas.height - canvas.height) / 2);
+        ctx.drawImage(canvas, offsetX, offsetY);
+
+        const imgData = outCanvas.toDataURL('image/jpeg', 0.98);
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
           orientation: 'landscape',
@@ -2061,11 +2131,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         });
 
         // Khổ A4 Landscape: 297mm x 210mm
-        // Tỷ lệ chuẩn A4 căn đều 4 lề ~14mm - 15.4mm
-        const pdfWidth = 269;
-        const pdfHeight = pdfWidth / (canvas.width / canvas.height);
+        // Tỷ lệ chuẩn A4 căn đều 4 lề an toàn
+        const pdfWidth = 282;
+        const pdfHeight = pdfWidth / (outCanvas.width / outCanvas.height);
         const x = (297 - pdfWidth) / 2;
-        const y = (210 - pdfHeight) / 2;
+        const y = Math.max(0, (210 - pdfHeight) / 2);
 
         pdf.addImage(imgData, 'JPEG', x, y, pdfWidth, pdfHeight);
 
@@ -2088,10 +2158,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         console.error('Lỗi tạo PDF:', err);
         window.print();
       } finally {
+        sheet.style.height = prevHeight;
+        sheet.style.overflow = prevOverflow;
         hiddenBtns.forEach(b => b.style.display = '');
         if (wasSmartphone) {
           document.body.classList.add('mode-smartphone');
         }
+        window.scrollTo(prevScrollX, prevScrollY);
       }
     }
 
@@ -2126,25 +2199,57 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       if (wasSmartphone) {
         document.body.classList.remove('mode-smartphone');
       }
-      await new Promise(r => setTimeout(r, 60));
+
+      // 1. Lưu lại tọa độ cuộn và cuộn về đầu trang (0,0) tránh bị mất chữ trên
+      const prevScrollX = window.scrollX;
+      const prevScrollY = window.scrollY;
+      window.scrollTo(0, 0);
+
+      // 2. Tạm ẩn nút thêm / xóa dòng
+      const hiddenBtns = document.querySelectorAll('.btn-add-pill, .btn-del-row');
+      hiddenBtns.forEach(b => b.style.display = 'none');
+
+      // 3. Đảm bảo khung báo cáo hiển thị trọn vẹn, không bị cắt xén phía dưới
+      const prevHeight = sheet.style.height;
+      const prevOverflow = sheet.style.overflow;
+      sheet.style.height = 'auto';
+      sheet.style.minHeight = '682px';
+      sheet.style.overflow = 'visible';
+
+      await new Promise(r => setTimeout(r, 70));
 
       try {
         if (typeof html2canvas === 'undefined') {
           throw new Error("Thư viện html2canvas chưa sẵn sàng. Vui lòng tải lại trang.");
         }
 
-        const hiddenBtns = document.querySelectorAll('.btn-add-pill, .btn-del-row');
-        hiddenBtns.forEach(b => b.style.display = 'none');
         const canvas = await html2canvas(sheet, {
-          scale: 2, // 2x retina (2048 x 1364) cực kỳ rõ nét chuẩn in
+          scale: 2, // 2x retina cực kỳ rõ nét chuẩn in
           useCORS: true,
           backgroundColor: '#FFFFFF',
-          windowWidth: 1100
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: document.documentElement.offsetWidth,
+          windowHeight: document.documentElement.offsetHeight
         });
+
+        // 4. ÁP DỤNG CO GIÃN TỶ LỆ 0.95 (VÀ VIỀN ĐỆM AN TOÀN) THEO YÊU CẦU
+        // Giãn khoảng 0.95 giúp viền trên, viền dưới và chữ ký luôn an toàn 100% khi xem trên mọi điện thoại/Zalo
+        const scaleFactor = window.currentExportScale || 0.95;
+        const outCanvas = document.createElement('canvas');
+        outCanvas.width = Math.round(canvas.width / scaleFactor);
+        outCanvas.height = Math.round(canvas.height / scaleFactor);
+        const ctx = outCanvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, outCanvas.width, outCanvas.height);
+
+        const offsetX = Math.round((outCanvas.width - canvas.width) / 2);
+        const offsetY = Math.round((outCanvas.height - canvas.height) / 2);
+        ctx.drawImage(canvas, offsetX, offsetY);
 
         const dateStr = (document.getElementById('metaNgayBaoCao')?.innerText || '').trim().replace(/[\/\\]/g, '-');
         const fileName = `Bao_Cao_Nhan_Luc_${dateStr || 'CIENCO510'}.png`;
-        const dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = outCanvas.toDataURL('image/png');
 
         // Thử tải về tự động (hoạt động tốt trên Desktop & Android)
         try {
@@ -2159,16 +2264,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         }
 
         // Luôn hiển thị Modal xem ảnh (Đặc biệt quan trọng trên iPhone / Google Apps Script iframe)
-        hiddenBtns.forEach(b => b.style.display = "");
         showImageModal(dataUrl, fileName);
 
       } catch (err) {
         console.error('Lỗi in hình ảnh:', err);
         alert('Lỗi xuất hình ảnh: ' + err.message);
       } finally {
+        sheet.style.height = prevHeight;
+        sheet.style.overflow = prevOverflow;
+        hiddenBtns.forEach(b => b.style.display = "");
         if (wasSmartphone) {
           document.body.classList.add('mode-smartphone');
         }
+        window.scrollTo(prevScrollX, prevScrollY);
       }
     }
 
