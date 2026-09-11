@@ -545,10 +545,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       cursor: pointer;
     }
 
-    /* MAIN REPORT SHEET - EXACT 1024 x 682 DIMENSIONS */
+    /* MAIN REPORT SHEET - PORTRAIT A4 (800 x 1132) */
     .report-sheet {
-      width: 1024px;
-      min-height: 682px;
+      width: 800px;
+      min-height: 1132px;
       height: auto;
       background: #FFFFFF;
       border: 2px solid var(--navy);
@@ -557,12 +557,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       position: relative;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Cắt góc trên phải cho banner khớp bo viền */
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
-    /* HEADER AREA: 180px HEIGHT */
+    /* HEADER AREA: 165px HEIGHT */
     .header-section {
-      height: 180px;
+      height: 165px;
       display: flex;
       border-bottom: 2px solid var(--navy);
       background: #FFFFFF;
@@ -570,21 +571,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     }
 
     .header-left-col {
-      width: 594px;
-      height: 180px;
-      padding: 10px 12px 10px 14px;
+      width: 496px;
+      height: 165px;
+      padding: 8px 8px 8px 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-sizing: border-box;
     }
 
     .title-box {
       text-align: center;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .title-main {
-      font-size: 22.5px;
+      font-size: 20px;
       font-weight: 900;
       color: var(--navy-sub);
       letter-spacing: 0.5px;
@@ -592,24 +594,24 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     }
 
     .title-sub {
-      font-size: 15.5px;
+      font-size: 14px;
       font-weight: 900;
       color: var(--navy-sub);
       letter-spacing: 1.2px;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     /* KHUNG THÔNG TIN DỰ ÁN (META CARD) */
     .meta-card {
       border: 1px solid var(--border-blue);
       border-radius: 6px;
-      padding: 7px 12px;
+      padding: 6px 10px;
       background: #FFFFFF;
-      font-size: 11.5px;
-      line-height: 1.45;
+      font-size: 11px;
+      line-height: 1.4;
       display: flex;
       flex-direction: column;
-      gap: 4.5px;
+      gap: 3.5px;
     }
 
     .meta-row {
@@ -674,14 +676,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     .weather-box {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 10.5px;
-      margin-left: 20px;
+      gap: 3px;
+      font-size: 9.5px;
+      margin-left: 6px;
       flex-shrink: 0;
     }
 
     .weather-lbl {
-      font-size: 10.5px;
+      font-size: 9.5px;
       font-weight: 700;
       color: var(--text-dark);
       white-space: nowrap;
@@ -690,13 +692,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     .weather-opt {
       display: inline-flex;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
       cursor: pointer;
       user-select: none;
-      font-size: 10px;
+      font-size: 9px;
       color: #1E293B;
       white-space: nowrap;
-      padding: 1px 3px;
+      padding: 1px 2px;
       border-radius: 3px;
     }
 
@@ -711,28 +713,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     }
 
     .weather-opt-other {
-      font-size: 10px;
+      font-size: 9px;
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
     }
 
     .dots-input {
       border-bottom: 1px dotted #4B5563;
       outline: none;
       display: inline-block;
-      min-width: 42px;
-      font-size: 10px;
+      min-width: 26px;
+      font-size: 9px;
     }
 
     /* HEADER RIGHT: BANNER ĂN THEO KHUNG VIỀN */
     .header-right-col {
-      width: 424px;
-      height: 180px;
+      width: 300px;
+      height: 165px;
       position: relative;
       overflow: hidden;
       background: #FFFFFF;
+      border-left: 2px solid var(--navy);
     }
 
     .header-right-col img {
@@ -742,73 +745,56 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       display: block;
     }
 
-    /* BODY AREA - 2D GRID ĐỂ BẢNG MỤC 4 VÀ KHUNG XÁC NHẬN GIÓNG NHAU HOÀN TOÀN */
+    /* BODY AREA - DỌC A4: PHẦN 1 & 2 CHIA ĐÔI; PHẦN 3 & 4 TRẢI DÀI; XÁC NHẬN GÓC PHẢI DƯỚI CÙNG */
     .body-section {
-      padding: 10px 14px 10px 14px;
+      padding: 8px 12px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex: 1;
+      box-sizing: border-box;
+    }
+
+    /* HÀNG 1: MỤC 1 VÀ MỤC 2 CHIA ĐÔI BÊN TRÊN */
+    .row-top-split {
       display: grid;
-      grid-template-columns: 485px 505px;
-      grid-template-rows: auto auto 1fr;
-      column-gap: 14px;
-      row-gap: 6px;
-      flex: 1;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 12px;
+      width: 100%;
+      align-items: start;
     }
 
-    #blockSec1 {
-      grid-column: 1;
-      grid-row: 1;
+    #blockSec1, #blockSec2 {
       display: flex;
       flex-direction: column;
+      width: 100%;
     }
 
-    #colRightTop {
-      grid-column: 2;
-      grid-row: 1 / 3;
+    /* HÀNG 2: MỤC 3 TRẢI DÀI TỪ TRÁI SANG PHẢI */
+    #blockSec3 {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
+      width: 100%;
     }
 
-    #pillSec4Block {
-      grid-column: 1;
-      grid-row: 2;
-      display: flex;
-      align-items: flex-end;
-    }
-
-    #pillSec4Block .section-pill {
-      display: inline-block;
-      margin-bottom: 0;
-    }
-
-    #t4Container {
-      grid-column: 1;
-      grid-row: 3;
-      height: 100%;
+    /* HÀNG 3: MỤC 4 TRẢI DÀI TỪ TRÁI SANG PHẢI */
+    #blockSec4 {
       display: flex;
       flex-direction: column;
+      width: 100%;
     }
 
-    #t4Container table {
-      height: 100%;
+    #blockSec4 .tbl-container {
+      width: 100%;
     }
 
-    #blockSec5 {
-      grid-column: 2;
-      grid-row: 3;
-      height: 100%;
+    /* HÀNG 4: KHUNG XÁC NHẬN NẰM GÓC PHẢI DƯỚI CÙNG */
+    .row-bottom-confirm {
       display: flex;
-      flex-direction: column;
-      margin-top: 0;
-    }
-
-    .confirm-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0 6px 0;
+      justify-content: flex-end;
+      width: 100%;
+      margin-top: 4px;
+      margin-bottom: 2px;
     }
 
     .sec-block {
@@ -939,14 +925,26 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       color: #EF4444;
     }
 
-    /* SECTION 3: ĐÁNH GIÁ CARD */
+    /* SECTION 3: ĐÁNH GIÁ CARD TRẢI DÀI */
     .eval-box {
       border: 1px solid var(--border-blue);
       border-radius: 6px;
-      padding: 7.5px 12px;
+      padding: 6px 12px;
       background: #FFFFFF;
-      font-size: 11.5px;
-      line-height: 1.62;
+      font-size: 11px;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .eval-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 16px;
+      row-gap: 3.5px;
+    }
+
+    .eval-col {
       display: flex;
       flex-direction: column;
       gap: 3.5px;
@@ -959,9 +957,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       gap: 4px;
     }
 
+    .eval-full-row {
+      display: flex;
+      align-items: center;
+      margin-top: 3px;
+      width: 100%;
+    }
+
     .eval-lbl-aligned {
       display: inline-block;
-      width: 235px;
+      width: 205px;
       font-weight: 700;
       flex-shrink: 0;
     }
@@ -969,9 +974,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     .eval-num-red {
       color: var(--red);
       font-weight: 800;
-      font-size: 13.5px;
+      font-size: 13px;
       display: inline-block;
-      min-width: 20px;
+      min-width: 18px;
       text-align: center;
       margin-right: 4px;
       outline: none;
@@ -983,11 +988,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       gap: 4px;
       cursor: pointer;
       user-select: none;
-      margin-right: 12px;
+      margin-right: 10px;
     }
 
     .chk-icon {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: bold;
       color: var(--navy);
       line-height: 1;
@@ -1006,6 +1011,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
     /* SECTION 5: XÁC NHẬN CARD */
     .confirm-box {
+      width: 290px;
       border: 1px solid var(--border-blue);
       border-radius: 6px;
       overflow: hidden;
@@ -1020,23 +1026,33 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       color: #FFFFFF;
       width: 100%;
       text-align: center;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
-      padding: 3.5px 0;
+      padding: 3px 0;
       letter-spacing: 0.5px;
+    }
+
+    .confirm-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 8px 6px 8px;
+      box-sizing: border-box;
     }
 
     .signer-role {
       color: var(--navy);
       font-weight: 800;
-      font-size: 12.5px;
+      font-size: 11.5px;
       text-align: center;
-      margin-top: 5px;
+      margin-top: 2px;
       outline: none;
     }
 
     .signer-sig-wrapper {
-      height: 60px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1045,18 +1061,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     }
 
     .signer-sig-wrapper img {
-      max-height: 58px;
-      max-width: 195px;
+      max-height: 50px;
+      max-width: 180px;
       object-fit: contain;
-      transform: scale(1.2);
+      transform: scale(1.15);
     }
 
     .signer-name {
       color: var(--navy);
       font-weight: 800;
-      font-size: 13.5px;
+      font-size: 12px;
       text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: 2px;
       outline: none;
     }
 
@@ -1291,19 +1307,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         box-sizing: border-box !important;
       }
 
-      /* MỤC 1: THỐNG KÊ NHÂN LỰC */
-      body.mode-smartphone #blockSec1 {
-        order: 1 !important;
-        width: 100% !important;
-      }
-
-      /* MỤC 2 & 3: KHU VỰC THI CÔNG & ĐÁNH GIÁ */
-      body.mode-smartphone #colRightTop {
-        order: 2 !important;
-        width: 100% !important;
+      body.mode-smartphone .row-top-split {
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
+        width: 100% !important;
+      }
+
+      body.mode-smartphone #blockSec1 {
+        width: 100% !important;
       }
 
       body.mode-smartphone #blockSec2 {
@@ -1314,22 +1326,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         width: 100% !important;
       }
 
-      /* MỤC 4: KẾ HOẠCH NHÂN LỰC NGÀY MAI */
-      body.mode-smartphone #pillSec4Block {
-        order: 3 !important;
-        width: 100% !important;
-        display: block !important;
+      body.mode-smartphone .eval-grid {
+        grid-template-columns: 1fr !important;
+        gap: 4px !important;
       }
 
-      body.mode-smartphone #t4Container {
-        order: 4 !important;
+      body.mode-smartphone #blockSec4 {
         width: 100% !important;
-        height: auto !important;
       }
 
-      /* MỤC 5: XÁC NHẬN */
+      body.mode-smartphone .row-bottom-confirm {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+
       body.mode-smartphone #blockSec5 {
-        order: 5 !important;
         width: 100% !important;
         height: auto !important;
         margin-top: 2px !important;
@@ -1421,14 +1432,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       }
     }
 
-    /* PRINT RULES - CHUẨN 1 TRANG A4 LANDSCAPE CÂN ĐỐI & CHỐNG MẤT GÓC TRÊN MỌI THIẾT BỊ */
+    /* PRINT RULES - CHUẨN 1 TRANG A4 PORTRAIT CÂN ĐỐI & CHỐNG MẤT GÓC TRÊN MỌI THIẾT BỊ */
     * {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
 
     @page {
-      size: A4 landscape;
+      size: A4 portrait;
       margin: 0;
     }
 
@@ -1460,18 +1471,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         padding: 0 !important;
         display: flex !important;
         justify-content: center !important;
-        align-items: center !important;
+        align-items: flex-start !important;
         overflow: visible !important;
       }
 
       .report-sheet {
         box-shadow: none !important;
         border: 2px solid var(--navy) !important;
-        width: 1024px !important;
-        height: 682px !important;
-        margin: auto !important;
-        transform: scale(1.0) !important;
-        transform-origin: center center !important;
+        width: 800px !important;
+        min-height: 1132px !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        transform: scale(0.96) !important;
+        transform-origin: top center !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
         display: flex !important;
@@ -1485,19 +1497,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       .header-section {
         display: flex !important;
         flex-direction: row !important;
-        height: 180px !important;
+        height: 165px !important;
         margin-bottom: 0 !important;
         border-bottom: 2px solid var(--navy) !important;
       }
 
       .header-left-col {
-        width: 594px !important;
-        padding: 10px 14px 10px 16px !important;
+        width: 496px !important;
+        padding: 8px 8px 8px 10px !important;
       }
 
       .header-right-col {
-        width: 424px !important;
-        height: 180px !important;
+        width: 300px !important;
+        height: 165px !important;
         display: block !important;
         border-left: 2px solid var(--navy) !important;
         order: unset !important;
@@ -1513,20 +1525,35 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       }
 
       .body-section {
-        display: grid !important;
-        grid-template-columns: 485px 505px !important;
-        grid-template-rows: auto auto 1fr !important;
-        column-gap: 14px !important;
-        row-gap: 6px !important;
-        padding: 10px 14px 10px 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 8px 12px 10px 12px !important;
         flex: 1 !important;
       }
 
-      #blockSec1 { grid-column: 1 !important; grid-row: 1 !important; order: unset !important; width: auto !important; }
-      #colRightTop { grid-column: 2 !important; grid-row: 1 / 3 !important; order: unset !important; width: auto !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }
-      #pillSec4Block { grid-column: 1 !important; grid-row: 2 !important; order: unset !important; display: flex !important; align-items: flex-end !important; }
-      #t4Container { grid-column: 1 !important; grid-row: 3 !important; order: unset !important; width: auto !important; height: 100% !important; }
-      #blockSec5 { grid-column: 2 !important; grid-row: 3 !important; order: unset !important; width: auto !important; height: 100% !important; margin-top: 0 !important; }
+      .row-top-split {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        column-gap: 12px !important;
+        width: 100% !important;
+      }
+
+      #blockSec1 { width: 100% !important; }
+      #blockSec2 { width: 100% !important; }
+      #blockSec3 { width: 100% !important; }
+      #blockSec4 { width: 100% !important; }
+
+      .row-bottom-confirm {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+      }
+
+      #blockSec5 {
+        width: 290px !important;
+        margin-top: 0 !important;
+      }
     }
   
     /* MODAL XEM ẢNH XUẤT CHO MOBILE VÀ DESKTOP */
@@ -1743,69 +1770,69 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       </div>
     </div>
 
-    <!-- BODY AREA - 2D GRID -->
+    <!-- BODY AREA - DỌC A4 -->
     <div class="body-section">
 
-      <!-- Ô 1: MỤC 1 (CỘT TRÁI, HÀNG 1) -->
-      <div class="sec-block" id="blockSec1">
-        <div class="section-pill">
-          1. THỐNG KÊ NHÂN LỰC
-          <button class="btn-add-pill" onclick="addRowSec1()" title="Thêm dòng">+ Thêm</button>
+      <!-- HÀNG 1: MỤC 1 & MỤC 2 CHIA ĐÔI BÊN TRÊN -->
+      <div class="row-top-split">
+        <!-- MỤC 1: THỐNG KÊ NHÂN LỰC (CỘT TRÁI) -->
+        <div class="sec-block" id="blockSec1">
+          <div class="section-pill">
+            1. THỐNG KÊ NHÂN LỰC
+            <button class="btn-add-pill" onclick="addRowSec1()" title="Thêm dòng">+ Thêm</button>
+          </div>
+          <div class="tbl-container">
+            <table class="tbl-clean" id="tableSec1">
+              <thead>
+                <tr>
+                  <th style="width: 36px;">STT</th>
+                  <th>BỘ PHẬN / TỔ ĐỘI</th>
+                  <th style="width: 110px;">SỐ LƯỢNG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center" contenteditable="true">1</td>
+                  <td class="text-left" contenteditable="true">Ban chỉ huy công trường <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">2</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">2</td>
+                  <td class="text-left" contenteditable="true">Đội trưởng 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">1</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">3</td>
+                  <td class="text-left" contenteditable="true">Công nhân đội 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">15</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">4</td>
+                  <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">4</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">5</td>
+                  <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">8</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">6</td>
+                  <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">7</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="tbl-total-row">
+                  <td colspan="2" class="text-center" style="color: var(--red); font-weight: 800; font-size: 12px;">TỔNG CỘNG</td>
+                  <td class="tbl-num-red" style="font-size: 14px;" id="totalSec1">37</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
-        <div class="tbl-container">
-          <table class="tbl-clean" id="tableSec1">
-            <thead>
-              <tr>
-                <th style="width: 44px;">STT</th>
-                <th>BỘ PHẬN / TỔ ĐỘI</th>
-                <th style="width: 145px;">SỐ LƯỢNG (NGƯỜI)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="text-center" contenteditable="true">1</td>
-                <td class="text-left" contenteditable="true">Ban chỉ huy công trường <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">2</td>
-              </tr>
-              <tr>
-                <td class="text-center" contenteditable="true">2</td>
-                <td class="text-left" contenteditable="true">Đội trưởng 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">1</td>
-              </tr>
-              <tr>
-                <td class="text-center" contenteditable="true">3</td>
-                <td class="text-left" contenteditable="true">Công nhân đội 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">15</td>
-              </tr>
-              <tr>
-                <td class="text-center" contenteditable="true">4</td>
-                <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">4</td>
-              </tr>
-              <tr>
-                <td class="text-center" contenteditable="true">5</td>
-                <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">8</td>
-              </tr>
-              <tr>
-                <td class="text-center" contenteditable="true">6</td>
-                <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">7</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr class="tbl-total-row">
-                <td colspan="2" class="text-center" style="color: var(--red); font-weight: 800; font-size: 13px;">TỔNG CỘNG</td>
-                <td class="tbl-num-red" style="font-size: 15px;" id="totalSec1">37</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
 
-      <!-- Ô 2: MỤC 2 & MỤC 3 (CỘT PHẢI, HÀNG 1 & 2) -->
-      <div id="colRightTop">
-        <!-- 2. NHÂN LỰC THEO KHU VỰC THI CÔNG -->
+        <!-- MỤC 2: NHÂN LỰC THEO KHU VỰC THI CÔNG (CỘT PHẢI) -->
         <div class="sec-block" id="blockSec2">
           <div class="section-pill">
             2. NHÂN LỰC THEO KHU VỰC THI CÔNG
@@ -1815,9 +1842,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <table class="tbl-clean" id="tableSec2">
               <thead>
                 <tr>
-                  <th style="width: 75px;">KHU VỰC</th>
+                  <th style="width: 65px;">KHU VỰC</th>
                   <th>NỘI DUNG CÔNG VIỆC</th>
-                  <th style="width: 120px;">SỐ LƯỢNG NHÂN CÔNG</th>
+                  <th style="width: 95px;">SỐ LƯỢNG</th>
                 </tr>
               </thead>
               <tbody>
@@ -1840,107 +1867,112 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             </table>
           </div>
         </div>
+      </div>
 
-        <!-- 3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC -->
-        <div class="sec-block" id="blockSec3">
-          <div class="section-pill">3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC</div>
-          <div class="eval-box">
-            <div class="eval-row">
-              <span class="eval-lbl-aligned">• Tổng số nhân lực hiện trường:</span>
-              <span class="eval-num-red" id="evalTotalManpower">37</span>
-              <span>người.</span>
+      <!-- HÀNG 2: MỤC 3 TRẢI DÀI TỪ TRÁI SANG PHẢI -->
+      <div class="sec-block" id="blockSec3">
+        <div class="section-pill">3. ĐÁNH GIÁ TÌNH HÌNH NHÂN LỰC</div>
+        <div class="eval-box">
+          <div class="eval-grid">
+            <div class="eval-col">
+              <div class="eval-row">
+                <span class="eval-lbl-aligned">• Tổng số nhân lực hiện trường:</span>
+                <span class="eval-num-red" id="evalTotalManpower">37</span>
+                <span>người.</span>
+              </div>
+              <div class="eval-row">
+                <span class="eval-lbl-aligned">• Số nhân công mới vào:</span>
+                <span class="eval-num-red" contenteditable="true" id="evalMoiVao">00</span>
+                <span>người.</span>
+              </div>
+              <div class="eval-row">
+                <span class="eval-lbl-aligned">• Số nhân công nghỉ việc/phép:</span>
+                <span class="eval-num-red" contenteditable="true" id="evalNghiViec">00</span>
+                <span>người.</span>
+              </div>
             </div>
 
-            <div class="eval-row">
-              <span style="font-weight: 700;">• Nhân lực đáp ứng tiến độ:</span>
-              <span style="margin-left: 20px;"></span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☑</span> Có</span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☐</span> Không</span>
+            <div class="eval-col">
+              <div class="eval-row">
+                <span style="font-weight: 700;">• Nhân lực đáp ứng tiến độ:</span>
+                <span style="margin-left: 10px;"></span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☑</span> Có</span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'tiendo')"><span class="chk-icon">☐</span> Không</span>
+              </div>
+              <div class="eval-row">
+                <span style="font-weight: 700;">• Tình hình chấp hành ATLĐ:</span>
+                <span style="margin-left: 8px;"></span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☑</span> Tốt</span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Khá</span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> TB</span>
+                <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Kém</span>
+              </div>
             </div>
+          </div>
 
-            <div class="eval-row">
-              <span style="font-weight: 700;">• Tình hình chấp hành ATLĐ:</span>
-              <span style="margin-left: 14px;"></span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☑</span> Tốt</span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Khá</span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Trung bình</span>
-              <span class="chk-opt" onclick="toggleRadio(this, 'atld')"><span class="chk-icon">☐</span> Kém</span>
-            </div>
-
-            <div class="eval-row">
-              <span class="eval-lbl-aligned">• Số nhân công mới vào công trường:</span>
-              <span class="eval-num-red" contenteditable="true" id="evalMoiVao">00</span>
-              <span>người.</span>
-            </div>
-
-            <div class="eval-row">
-              <span class="eval-lbl-aligned">• Số nhân công nghỉ việc / nghỉ phép:</span>
-              <span class="eval-num-red" contenteditable="true" id="evalNghiViec">00</span>
-              <span>người.</span>
-            </div>
-
-            <div class="eval-row" style="margin-top: 2px;">
-              <span style="font-weight: 700; white-space: nowrap;">• Ghi chú khác:</span>
-              <span class="dotted-line-fill" contenteditable="true" id="evalGhiChu"></span>
-            </div>
+          <div class="eval-full-row">
+            <span style="font-weight: 700; white-space: nowrap;">• Ghi chú khác:</span>
+            <span class="dotted-line-fill" contenteditable="true" id="evalGhiChu"></span>
           </div>
         </div>
       </div>
 
-      <!-- Ô 3: TIÊU ĐỀ MỤC 4 (CỘT TRÁI, HÀNG 2 - SÁT KHUNG DƯỚI SỐ 1) -->
-      <div id="pillSec4Block">
-        <div class="section-pill">4. KẾ HOẠCH NHÂN LỰC NGÀY MAI <span id="tomorrowPillDate">(10/09/2026)</span></div>
+      <!-- HÀNG 3: MỤC 4 TRẢI DÀI TỪ TRÁI SANG PHẢI -->
+      <div class="sec-block" id="blockSec4">
+        <div class="section-pill" id="pillSec4Block">
+          4. KẾ HOẠCH NHÂN LỰC NGÀY MAI <span id="tomorrowPillDate">(10/09/2026)</span>
+        </div>
+        <div class="tbl-container" id="t4Container">
+          <table class="tbl-clean" id="tableSec4">
+            <thead>
+              <tr>
+                <th style="width: 32%;">BỘ PHẬN / TỔ ĐỘI</th>
+                <th style="width: 18%;">NHÂN LỰC DỰ KIẾN</th>
+                <th style="width: 32%;">BỘ PHẬN / TỔ ĐỘI</th>
+                <th style="width: 18%;">NHÂN LỰC DỰ KIẾN</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
+                <td class="text-left" contenteditable="true">Cơ giới</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
+              </tr>
+              <tr>
+                <td class="text-left" contenteditable="true">Đội trưởng 22</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
+                <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
+              </tr>
+              <tr>
+                <td class="text-left" contenteditable="true">Công nhân đội 22</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
+                <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="tbl-total-row">
+                <td colspan="3" class="text-right" style="color: var(--red); font-weight: 800; font-size: 12px; padding-right: 14px;">TỔNG CỘNG</td>
+                <td class="text-center tbl-num-red" style="font-size: 14px;" id="totalSec4">37</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
 
-      <!-- Ô 4: BẢNG MỤC 4 (CỘT TRÁI, HÀNG 3 - GIÓNG NGANG KHUNG XÁC NHẬN) -->
-      <div class="tbl-container" id="t4Container">
-        <table class="tbl-clean" id="tableSec4">
-          <thead>
-            <tr>
-              <th style="width: 140px;">BỘ PHẬN / TỔ ĐỘI</th>
-              <th style="width: 95px;">NHÂN LỰC DỰ KIẾN</th>
-              <th style="width: 140px;">BỘ PHẬN / TỔ ĐỘI</th>
-              <th style="width: 95px;">NHÂN LỰC DỰ KIẾN</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
-              <td class="text-left" contenteditable="true">Cơ giới</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
-            </tr>
-            <tr>
-              <td class="text-left" contenteditable="true">Đội trưởng 22</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
-              <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
-            </tr>
-            <tr>
-              <td class="text-left" contenteditable="true">Công nhân đội 22</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
-              <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
-              <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr class="tbl-total-row">
-              <td colspan="3" class="text-right" style="color: var(--red); font-weight: 800; font-size: 12.5px; padding-right: 14px;">TỔNG CỘNG</td>
-              <td class="text-center tbl-num-red" style="font-size: 14.5px;" id="totalSec4">37</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <!-- Ô 5: KHUNG XÁC NHẬN (CỘT PHẢI, HÀNG 3 - GIÓNG NGANG BẢNG MỤC 4 VÀ ĐỒNG ĐỀU CHIỀU CAO) -->
-      <div class="confirm-box" id="blockSec5">
-        <div class="confirm-bar">XÁC NHẬN</div>
-        <div class="confirm-body">
-          <div class="signer-role" contenteditable="true" id="signerRole">CHỈ HUY TRƯỞNG CÔNG TRƯỜNG</div>
-          <div class="signer-sig-wrapper">
-            <img src="data:image/png;base64,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" alt="Chữ ký" id="sigImg">
+      <!-- HÀNG 4: KHUNG XÁC NHẬN NẰM GÓC PHẢI DƯỚI CÙNG -->
+      <div class="row-bottom-confirm">
+        <div class="confirm-box" id="blockSec5">
+          <div class="confirm-bar">XÁC NHẬN</div>
+          <div class="confirm-body">
+            <div class="signer-role" contenteditable="true" id="signerRole">CHỈ HUY TRƯỞNG CÔNG TRƯỜNG</div>
+            <div class="signer-sig-wrapper">
+              <img src="data:image/png;base64,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" alt="Chữ ký" id="sigImg">
+            </div>
+            <div class="signer-name" contenteditable="true" id="signerName">Nguyễn Anh Tuấn</div>
           </div>
-          <div class="signer-name" contenteditable="true" id="signerName">Nguyễn Anh Tuấn</div>
         </div>
       </div>
 
@@ -2087,7 +2119,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const prevHeight = sheet.style.height;
       const prevOverflow = sheet.style.overflow;
       sheet.style.height = 'auto';
-      sheet.style.minHeight = '682px';
+      sheet.style.minHeight = '1132px';
       sheet.style.overflow = 'visible';
 
       await new Promise(r => setTimeout(r, 70));
@@ -2125,19 +2157,26 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         const imgData = outCanvas.toDataURL('image/jpeg', 0.98);
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
-          orientation: 'landscape',
+          orientation: 'portrait',
           unit: 'mm',
           format: 'a4'
         });
 
-        // Khổ A4 Landscape: 297mm x 210mm
-        // Tỷ lệ chuẩn A4 căn đều 4 lề an toàn
-        const pdfWidth = 282;
-        const pdfHeight = pdfWidth / (outCanvas.width / outCanvas.height);
-        const x = (297 - pdfWidth) / 2;
-        const y = Math.max(0, (210 - pdfHeight) / 2);
-
-        pdf.addImage(imgData, 'JPEG', x, y, pdfWidth, pdfHeight);
+        // Khổ A4 Portrait: 210mm x 297mm
+        // Tỷ lệ chuẩn A4 căn đều 4 lề an toàn, đảm bảo đúng 1 trang duy nhất
+        const pdfWidth = 194;
+        let pdfHeight = pdfWidth * (outCanvas.height / outCanvas.width);
+        if (pdfHeight > 281) {
+          pdfHeight = 281;
+          const adjustedWidth = pdfHeight * (outCanvas.width / outCanvas.height);
+          const x = (210 - adjustedWidth) / 2;
+          const y = (297 - pdfHeight) / 2;
+          pdf.addImage(imgData, 'JPEG', x, y, adjustedWidth, pdfHeight);
+        } else {
+          const x = (210 - pdfWidth) / 2;
+          const y = (297 - pdfHeight) / 2;
+          pdf.addImage(imgData, 'JPEG', x, y, pdfWidth, pdfHeight);
+        }
 
         const dateStr = (document.getElementById('metaNgayBaoCao')?.innerText || '').trim().replace(/[\/\\]/g, '-');
         const fileName = `Bao_Cao_Nhan_Luc_${dateStr || 'CIENCO510'}.pdf`;
@@ -2194,7 +2233,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const sheet = document.getElementById('reportSheet');
       if (!sheet) return;
 
-      // Nếu đang xem ở chế độ Smartphone, tạm chuyển sang Desktop để chụp nguyên bản A4 Landscape
+      // Nếu đang xem ở chế độ Smartphone, tạm chuyển sang Desktop để chụp nguyên bản A4 Portrait
       const wasSmartphone = document.body.classList.contains('mode-smartphone');
       if (wasSmartphone) {
         document.body.classList.remove('mode-smartphone');
@@ -2213,7 +2252,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const prevHeight = sheet.style.height;
       const prevOverflow = sheet.style.overflow;
       sheet.style.height = 'auto';
-      sheet.style.minHeight = '682px';
+      sheet.style.minHeight = '1132px';
       sheet.style.overflow = 'visible';
 
       await new Promise(r => setTimeout(r, 70));
@@ -2406,12 +2445,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       </div>
       <div class="img-modal-body">
         <div class="img-modal-tip">
-          ✨ <b>File PDF chuẩn A4 Landscape:</b> Đã được xử lý sạch 100%, <b>không dính dòng cảnh báo của Google</b>, không bị lệch lề, mất góc hay mất màu nền.
+          ✨ <b>File PDF chuẩn A4 Portrait (Khổ dọc):</b> Đã được xử lý sạch 100%, <b>không dính dòng cảnh báo của Google</b>, không bị lệch lề, mất góc hay mất màu nền.
         </div>
         <div style="padding: 24px; text-align: center;">
           <div style="font-size: 48px; margin-bottom: 12px;">📑</div>
           <div id="pdfModalFileName" style="font-weight: 700; color: #0b3064; font-size: 16px; margin-bottom: 8px;">Bao_Cao_Nhan_Luc_CIENCO510.pdf</div>
-          <div style="font-size: 13px; color: #64748b;">Khổ giấy A4 Ngang (1 trang duy nhất) • Đầy đủ màu sắc & viền bo</div>
+          <div style="font-size: 13px; color: #64748b;">Khổ giấy A4 Dọc (1 trang duy nhất) • Đầy đủ màu sắc & viền bo</div>
         </div>
       </div>
       <div class="img-modal-footer" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
