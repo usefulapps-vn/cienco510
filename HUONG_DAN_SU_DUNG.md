@@ -42,10 +42,12 @@ hanario/Documents/quyen/
 - **Đổi Logo / Banner & Chữ ký**:
   - Rê chuột vào góc phải vùng Banner hoặc vùng Chữ ký sẽ xuất hiện nút `Đổi ảnh banner` / `Đổi chữ ký`. Bấm vào để chọn ảnh logo hoặc chữ ký từ máy tính của bạn.
 
-### 3. Lưu & Tải lại dữ liệu hàng ngày
-- **Lưu dữ liệu (.json)**: Bấm nút `Lưu dữ liệu (.json)` trên thanh công cụ để tải về máy file cấu hình cho ngày hôm đó (ví dụ: `Bao_Cao_Nhan_Luc_15-07-2026.json`).
-- **Nạp dữ liệu (.json)**: Khi cần báo cáo cho ngày mới hoặc xem lại ngày cũ, bấm `Nạp dữ liệu (.json)` và chọn file để nạp toàn bộ thông tin ngay lập tức.
-- **Mẫu ban đầu**: Bấm nút `Mẫu ban đầu` nếu muốn khôi phục về trạng thái mặc định.
+### 3. Tự động lưu & Dùng lại form hôm qua
+- **Tự động ghi nhớ (Auto-Save)**: Mọi thao tác nhập liệu, thêm/xóa dòng hoặc bấm xuất báo cáo đều được hệ thống tự động lưu vào bộ nhớ trình duyệt (`localStorage`).
+- **Dùng lại form hôm qua**: Mỗi ngày mới khi mở báo cáo, chỉ cần bấm nút **`Form hôm qua`** trên thanh công cụ:
+  - Toàn bộ danh sách tổ đội, nội dung công việc và số lượng nhân lực hôm trước sẽ được nạp lại ngay lập tức.
+  - **Ngày báo cáo** sẽ tự động được cập nhật sang ngày hôm nay (`today`), đồng thời kế hoạch ngày mai cũng được tự động đồng bộ theo.
+- **Mẫu ban đầu**: Bấm nút `Mẫu ban đầu` nếu muốn khôi phục giao diện về trạng thái bảng mẫu mặc định.
 
 ### 4. Xuất file PDF hoặc In ra giấy
 - Bấm nút **"In / Xuất PDF (A4)"** trên thanh công cụ (hoặc phím tắt `Ctrl + P` trên Windows / `Cmd + P` trên Mac).
