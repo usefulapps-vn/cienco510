@@ -1725,12 +1725,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         </svg>
         In hình ảnh
       </button>
-      <button class="btn-tool btn-tool-history" onclick="loadYesterdayForm()" title="Dùng lại toàn bộ thông tin từ form đã lưu hôm qua (tự động cập nhật ngày báo cáo sang hôm nay)">
+      <button class="btn-tool btn-tool-history" onclick="loadPreviousReport()" title="Dùng lại toàn bộ thông tin từ lần xuất file báo cáo gần nhất (tự động cập nhật ngày báo cáo sang hôm nay)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        Form hôm qua
+        Báo cáo trước
       </button>
       <button class="btn-tool" onclick="resetDefault()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2150,8 +2150,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const sheet = document.getElementById('reportSheet');
       if (!sheet) return;
 
-      // Lưu lại dữ liệu form mới nhất trước khi xuất PDF
-      saveCurrentForm();
+      // Lưu lại mốc "Báo cáo trước" khi xuất PDF
+      saveExportedReport();
 
       const wasSmartphone = document.body.classList.contains('mode-smartphone');
       if (wasSmartphone) {
@@ -2285,8 +2285,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const sheet = document.getElementById('reportSheet');
       if (!sheet) return;
 
-      // Lưu lại dữ liệu form mới nhất trước khi xuất ảnh
-      saveCurrentForm();
+      // Lưu lại mốc "Báo cáo trước" khi xuất ảnh
+      saveExportedReport();
 
       // Nếu đang xem ở chế độ Smartphone, tạm chuyển sang Desktop để chụp nguyên bản A4 Portrait
       const wasSmartphone = document.body.classList.contains('mode-smartphone');
@@ -2550,12 +2550,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       };
     }
 
+    // Tự động lưu bản nháp chỉnh sửa vào localStorage
     function saveCurrentForm() {
       try {
         const data = getFormDataObject();
-        localStorage.setItem('cienco510_yesterday_form', JSON.stringify(data));
+        localStorage.setItem('cienco510_draft_form', JSON.stringify(data));
+        // Đồng thời làm mốc dự phòng nếu chưa từng xuất file
+        if (!localStorage.getItem('cienco510_last_exported_report')) {
+          localStorage.setItem('cienco510_last_exported_report', JSON.stringify(data));
+        }
       } catch (e) {
         console.error('Không thể lưu form:', e);
+      }
+    }
+
+    // Lưu mốc chính thức khi xuất PDF hoặc xuất ảnh (Lần xuất file gần nhất)
+    function saveExportedReport() {
+      try {
+        const data = getFormDataObject();
+        data.savedAt = new Date().toISOString();
+        localStorage.setItem('cienco510_last_exported_report', JSON.stringify(data));
+      } catch (e) {
+        console.error('Không thể lưu báo cáo xuất file:', e);
       }
     }
 
@@ -2567,24 +2583,36 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       }, 400);
     }
 
-    function loadYesterdayForm() {
+    // Dùng lại thông tin từ lần xuất file gần nhất (Báo cáo trước)
+    function loadPreviousReport() {
       try {
-        const savedStr = localStorage.getItem('cienco510_yesterday_form');
+        const savedStr = localStorage.getItem('cienco510_last_exported_report') || localStorage.getItem('cienco510_draft_form') || localStorage.getItem('cienco510_yesterday_form');
         if (!savedStr) {
-          alert('Chưa có dữ liệu form hôm qua được lưu trên trình duyệt này.\n\n👉 Khi bạn nhập liệu, chỉnh sửa hoặc bấm xuất báo cáo, dữ liệu sẽ tự động được lưu để dùng lại bất kỳ lúc nào!');
+          alert('Chưa có dữ liệu "Báo cáo trước" (lần xuất file gần nhất) trên trình duyệt này.\n\n👉 Khi bạn bấm "In / Xuất PDF" hoặc "In hình ảnh", hệ thống sẽ tự động lưu lại toàn bộ báo cáo đó để dùng lại bất cứ khi nào!');
           return;
         }
 
         const data = JSON.parse(savedStr);
-        if (confirm('Bạn có muốn dùng lại form hôm qua không?\n\nToàn bộ danh sách tổ đội, nội dung công việc và số lượng sẽ được nạp lại; Ngày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.')) {
+        let timeInfo = '';
+        if (data.savedAt) {
+          try {
+            const d = new Date(data.savedAt);
+            const dateStr = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+            const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            timeInfo = ` (lần xuất lúc ${timeStr} ngày ${dateStr})`;
+          } catch(e) {}
+        }
+
+        if (confirm(`Bạn có muốn dùng lại form "Báo cáo trước"${timeInfo} không?\n\nToàn bộ danh sách tổ đội, nội dung công việc và số lượng sẽ được nạp lại; Ngày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.`)) {
           applyFormData(data, true);
-          showToast('Đã nạp lại thành công toàn bộ form hôm qua!');
+          showToast('Đã nạp lại thành công dữ liệu Báo cáo trước!');
         }
       } catch (e) {
         console.error(e);
-        alert('Lỗi tải dữ liệu form hôm qua: ' + e.message);
+        alert('Lỗi tải dữ liệu Báo cáo trước: ' + e.message);
       }
     }
+    const loadYesterdayForm = loadPreviousReport; // Alias tương thích ngược
 
     function applyFormData(data, updateDateToToday = true) {
       if (!data) return;

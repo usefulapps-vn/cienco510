@@ -42,12 +42,12 @@ hanario/Documents/quyen/
 - **Đổi Logo / Banner & Chữ ký**:
   - Rê chuột vào góc phải vùng Banner hoặc vùng Chữ ký sẽ xuất hiện nút `Đổi ảnh banner` / `Đổi chữ ký`. Bấm vào để chọn ảnh logo hoặc chữ ký từ máy tính của bạn.
 
-### 3. Tự động lưu & Dùng lại form hôm qua
-- **Tự động ghi nhớ (Auto-Save)**: Mọi thao tác nhập liệu, thêm/xóa dòng hoặc bấm xuất báo cáo đều được hệ thống tự động lưu vào bộ nhớ trình duyệt (`localStorage`).
-- **Dùng lại form hôm qua**: Mỗi ngày mới khi mở báo cáo, chỉ cần bấm nút **`Form hôm qua`** trên thanh công cụ:
-  - Toàn bộ danh sách tổ đội, nội dung công việc và số lượng nhân lực hôm trước sẽ được nạp lại ngay lập tức.
-  - **Ngày báo cáo** sẽ tự động được cập nhật sang ngày hôm nay (`today`), đồng thời kế hoạch ngày mai cũng được tự động đồng bộ theo.
-- **Mẫu ban đầu**: Bấm nút `Mẫu ban đầu` nếu muốn khôi phục giao diện về trạng thái bảng mẫu mặc định.
+### 3. Tự động lưu & Dùng lại "Báo cáo trước"
+- **Tự động lưu mốc xuất file**: Mỗi khi bạn bấm **"In / Xuất PDF (A4)"** hoặc **"In hình ảnh"**, hệ thống sẽ tự động lưu lại toàn bộ nội dung của báo cáo đó làm mốc **"Báo cáo trước"** (lần xuất file gần nhất).
+- **Dùng lại Báo cáo trước**: Khi cần làm báo cáo mới cho ca/ngày tiếp theo, chỉ cần bấm nút **`Báo cáo trước`** trên thanh công cụ:
+  - Toàn bộ danh sách tổ đội, nội dung công việc, thiết bị và số lượng từ lần xuất file gần nhất sẽ được nạp lại ngay lập tức.
+  - **Ngày báo cáo** sẽ tự động được cập nhật sang ngày hôm nay (`today`), đồng thời kế hoạch ngày mai cũng được tự động đồng bộ theo (`today + 1`).
+- **Mẫu ban đầu**: Bấm nút `Mẫu ban đầu` nếu muốn khôi phục giao diện về trạng thái bảng mẫu mặc định gốc.
 
 ### 4. Xuất file PDF hoặc In ra giấy
 - Bấm nút **"In / Xuất PDF (A4)"** trên thanh công cụ (hoặc phím tắt `Ctrl + P` trên Windows / `Cmd + P` trên Mac).
