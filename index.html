@@ -1735,6 +1735,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       background: #0284c7;
       color: #ffffff;
     }
+    .btn-tbl-edit {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+    .btn-tbl-edit:hover {
+      background: #b45309;
+      color: #ffffff;
+    }
     .btn-tbl-del {
       background: #fee2e2;
       color: #dc2626;
@@ -2934,8 +2943,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       if (modal) modal.style.display = 'none';
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     // Lưu báo cáo hiện tại vào danh sách mẫu (Tối đa 10 dòng, tự xoá dòng cũ nhất nếu quá 10)
     function saveCurrentAsTemplate() {
+      let list = getSavedTemplates();
+      const defaultName = `Mẫu ${list.length + 1}`;
+      const userPrompt = prompt('Nhập tên cho mẫu báo cáo này:', defaultName);
+      if (userPrompt === null) return; // Người dùng bấm Hủy
+      const name = userPrompt.trim() || defaultName;
+
       const data = getFormDataObject();
       const now = new Date();
       const d = String(now.getDate()).padStart(2, '0');
@@ -2956,12 +2980,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
       const templateItem = {
         id: 'tpl_' + Date.now(),
+        name: name,
         savedAt: formattedDate,
         totalManpower: totalManpower,
         data: data
       };
 
-      let list = getSavedTemplates();
       // Thêm mẫu mới lên đầu danh sách
       list.unshift(templateItem);
 
@@ -2972,7 +2996,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
       saveTemplatesList(list);
       renderSavedTemplatesTable();
-      showToast(`Đã lưu thành mẫu (${totalManpower} nhân sự)!`);
+      showToast(`Đã lưu mẫu "${name}" (${totalManpower} nhân sự)!`);
     }
 
     // Render bảng Lịch sử lưu mẫu
@@ -2988,7 +3012,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       if (list.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="5" style="text-align: center; padding: 24px; color: #64748b;">
+            <td colspan="7" style="text-align: center; padding: 24px; color: #64748b;">
               <div style="font-size: 24px; margin-bottom: 6px;">📂</div>
               Chưa có mẫu nào được lưu.<br>
               Bấm nút <b>"Lưu báo cáo hiện tại"</b> bên trên để lưu mẫu đầu tiên!
@@ -3001,15 +3025,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       list.forEach((item, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="text-align: center; font-weight: 700; width: 45px;">${idx + 1}</td>
-          <td style="font-weight: 600; color: #002060;">${item.savedAt || '—'}</td>
-          <td style="text-align: center; font-weight: 700; color: #dc2626;">${item.totalManpower || 0} người</td>
-          <td style="text-align: center; width: 75px;">
+          <td style="text-align: center; font-weight: 700; width: 38px;">${idx + 1}</td>
+          <td style="font-weight: 600; color: #002060; word-break: break-word;">${escapeHtml(item.name || 'Mẫu ' + (idx + 1))}</td>
+          <td style="color: #475569; font-size: 12px; width: 125px;">${item.savedAt || '—'}</td>
+          <td style="text-align: center; font-weight: 700; color: #dc2626; width: 85px;">${item.totalManpower || 0} người</td>
+          <td style="text-align: center; width: 60px;">
             <button class="btn-tbl-action btn-tbl-open" onclick="loadCustomTemplate(${idx})" title="Nạp mẫu này vào báo cáo">
               📂 Mở
             </button>
           </td>
-          <td style="text-align: center; width: 75px;">
+          <td style="text-align: center; width: 60px;">
+            <button class="btn-tbl-action btn-tbl-edit" onclick="renameCustomTemplate(${idx})" title="Sửa tên mẫu">
+              ✏️ Sửa
+            </button>
+          </td>
+          <td style="text-align: center; width: 60px;">
             <button class="btn-tbl-action btn-tbl-del" onclick="deleteCustomTemplate(${idx})" title="Xoá mẫu này">
               🗑️ Xóa
             </button>
@@ -3019,16 +3049,38 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       });
     }
 
+    // Sửa tên mẫu đã lưu
+    function renameCustomTemplate(idx) {
+      const list = getSavedTemplates();
+      if (!list[idx]) return;
+
+      const currentName = list[idx].name || `Mẫu ${idx + 1}`;
+      const newName = prompt('Nhập tên mới cho mẫu này:', currentName);
+      if (newName === null) return; // Người dùng bấm Hủy
+
+      const trimmed = newName.trim();
+      if (!trimmed) {
+        alert('Tên mẫu không được để trống!');
+        return;
+      }
+
+      list[idx].name = trimmed;
+      saveTemplatesList(list);
+      renderSavedTemplatesTable();
+      showToast(`Đã đổi tên mẫu thành "${trimmed}"!`);
+    }
+
     // Mở / nạp mẫu đã lưu
     function loadCustomTemplate(idx) {
       const list = getSavedTemplates();
       if (!list[idx]) return;
 
       const item = list[idx];
-      if (confirm(`Bạn có muốn mở mẫu ngày [${item.savedAt}] (Tổng số: ${item.totalManpower} người) không?\n\nNgày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.`)) {
+      const nameDisplay = item.name ? `mẫu "${item.name}"` : `mẫu ngày [${item.savedAt}]`;
+      if (confirm(`Bạn có muốn mở ${nameDisplay} (${item.totalManpower} người) không?\n\nNgày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.`)) {
         applyFormData(item.data, true);
         closeSaveTemplateModal();
-        showToast(`Đã mở mẫu [${item.savedAt}] thành công!`);
+        showToast(`Đã mở ${nameDisplay} thành công!`);
       }
     }
 
@@ -3038,7 +3090,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       if (!list[idx]) return;
 
       const item = list[idx];
-      if (confirm(`Bạn có chắc chắn muốn xóa mẫu ngày [${item.savedAt}] (${item.totalManpower} người) khỏi danh sách không?`)) {
+      const nameDisplay = item.name ? `mẫu "${item.name}"` : `mẫu ngày [${item.savedAt}]`;
+      if (confirm(`Bạn có chắc chắn muốn xóa ${nameDisplay} khỏi danh sách không?`)) {
         list.splice(idx, 1);
         saveTemplatesList(list);
         renderSavedTemplatesTable();
@@ -3065,7 +3118,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
   <!-- MODAL QUẢN LÝ & LỊCH SỬ LƯU MẪU (TỐI ĐA 10 DÒNG) -->
   <div id="savedTemplatesModal" class="img-modal-overlay" style="display:none;" onclick="if(event.target === this) closeSaveTemplateModal()">
-    <div class="img-modal-content" style="max-width: 620px;">
+    <div class="img-modal-content" style="max-width: 680px;">
       <div class="img-modal-header">
         <div style="font-weight: 700; color: #002060; font-size: 15px; display:flex; align-items:center; gap:8px;">
           <span>📋</span> LỊCH SỬ LƯU MẪU BÁO CÁO
@@ -3086,11 +3139,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           <table class="tbl-templates">
             <thead>
               <tr>
-                <th style="text-align: center; width: 45px;">STT</th>
-                <th>Ngày tháng năm</th>
-                <th style="text-align: center;">Tổng số nhân sự</th>
-                <th style="text-align: center; width: 75px;">Mở</th>
-                <th style="text-align: center; width: 75px;">Xóa</th>
+                <th style="text-align: center; width: 38px;">STT</th>
+                <th style="min-width: 130px;">Tên mẫu</th>
+                <th style="width: 125px;">Ngày tháng năm</th>
+                <th style="text-align: center; width: 85px;">Tổng nhân sự</th>
+                <th style="text-align: center; width: 60px;">Mở</th>
+                <th style="text-align: center; width: 60px;">Sửa</th>
+                <th style="text-align: center; width: 60px;">Xóa</th>
               </tr>
             </thead>
             <tbody id="savedTemplatesTbody">
