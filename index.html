@@ -1768,7 +1768,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <div class="meta-right-col" style="margin-left: 16px;">
               <span style="font-weight: 700; color: #111827;">Ngày báo cáo</span>
               <span class="meta-colon">:</span>
-              <span class="meta-val-red" contenteditable="true" id="metaNgayBaoCao" oninput="this.dataset.userEdited='true'; syncTomorrowDate(this.innerText)">09/09/2026</span>
+              <span class="meta-val-red" contenteditable="true" id="metaNgayBaoCao" oninput="this.dataset.userEdited='true'; syncTomorrowDate(this.innerText)">16/09/2026</span>
             </div>
           </div>
 
@@ -1842,34 +1842,44 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">2</td>
-                  <td class="text-left" contenteditable="true">Đội trưởng 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">1</td>
+                  <td class="text-left" contenteditable="true">Đội trưởng + đội phó 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">2</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">3</td>
                   <td class="text-left" contenteditable="true">Công nhân đội 22 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">15</td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">25</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">4</td>
                   <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">4</td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">6</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">5</td>
                   <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">8</td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">20</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">6</td>
                   <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">7</td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">8</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">7</td>
+                  <td class="text-left" contenteditable="true">Đội trưởng đội 10 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">1</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">8</td>
+                  <td class="text-left" contenteditable="true">Công nhân đội 10 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">3</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr class="tbl-total-row">
                   <td colspan="2" class="text-center" style="color: var(--red); font-weight: 800; font-size: 12px;">TỔNG CỘNG</td>
-                  <td class="tbl-num-red" style="font-size: 14px;" id="totalSec1">37</td>
+                  <td class="tbl-num-red" style="font-size: 14px;" id="totalSec1">67</td>
                 </tr>
               </tfoot>
             </table>
@@ -1893,19 +1903,24 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               </thead>
               <tbody>
                 <tr>
-                  <td class="text-center" contenteditable="true">Mũi 1</td>
-                  <td class="text-left" contenteditable="true">Thi công cọc khoan nhồi <span style="color: var(--red); font-weight: bold;">trụ T2</span> <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true">15</td>
+                  <td class="text-center" contenteditable="true">Mũi 1-Đội 22</td>
+                  <td class="text-left" contenteditable="true">Thi công cọc khoan nhồi trụ T8<br>Thi công cọc khoan nhồi trụ T16<br>Thi công ván khuôn trụ T1<br>Thi công đà giáo trụ T2<br>Thi công khung giằng T3 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">27</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">Mũi 2</td>
-                  <td class="text-left" contenteditable="true">Thi công bệ đúc dầm <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true">8</td>
+                  <td class="text-left" contenteditable="true">Thi công sản xuất dầm 29 và 30 <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">20</td>
                 </tr>
                 <tr>
                   <td class="text-center" contenteditable="true">Mũi 3</td>
-                  <td class="text-left" contenteditable="true">Thi công vết hàn cơ; gia công thép hào kỹ thuật <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                  <td class="tbl-num-red" contenteditable="true">7</td>
+                  <td class="text-left" contenteditable="true">Thi công gia công thép cống hộp <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">8</td>
+                </tr>
+                <tr>
+                  <td class="text-center" contenteditable="true">Mũi 4 - Đội 10</td>
+                  <td class="text-left" contenteditable="true">Công tác chuẩn bị <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="tbl-num-red" contenteditable="true">4</td>
                 </tr>
               </tbody>
             </table>
@@ -1921,12 +1936,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
             <div class="eval-col">
               <div class="eval-row">
                 <span class="eval-lbl-aligned">• Tổng số nhân lực hiện trường:</span>
-                <span class="eval-num-red" id="evalTotalManpower">37</span>
+                <span class="eval-num-red" id="evalTotalManpower">67</span>
                 <span>người.</span>
               </div>
               <div class="eval-row">
                 <span class="eval-lbl-aligned">• Số nhân công mới vào:</span>
-                <span class="eval-num-red" contenteditable="true" id="evalMoiVao">00</span>
+                <span class="eval-num-red" contenteditable="true" id="evalMoiVao">4</span>
                 <span>người.</span>
               </div>
               <div class="eval-row">
@@ -1964,7 +1979,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <!-- HÀNG 3: MỤC 4 TRẢI DÀI TỪ TRÁI SANG PHẢI -->
       <div class="sec-block" id="blockSec4">
         <div class="section-pill" id="pillSec4Block">
-          4. KẾ HOẠCH NHÂN LỰC NGÀY MAI <span id="tomorrowPillDate">(10/09/2026)</span>
+          4. KẾ HOẠCH NHÂN LỰC NGÀY MAI <span id="tomorrowPillDate">(17/09/2026)</span>
         </div>
         <div class="tbl-container" id="t4Container">
           <table class="tbl-clean" id="tableSec4">
@@ -1981,25 +1996,25 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
                 <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
                 <td class="text-left" contenteditable="true">Cơ giới</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">6</td>
               </tr>
               <tr>
-                <td class="text-left" contenteditable="true">Đội trưởng 22</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
+                <td class="text-left" contenteditable="true">Đội trưởng + đội phó 22<br>Đội trưởng đội 10</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">2<br>1</td>
                 <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">20</td>
               </tr>
               <tr>
-                <td class="text-left" contenteditable="true">Công nhân đội 22</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
+                <td class="text-left" contenteditable="true">Công nhân đội 22<br>Công nhân đội 10</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">25<br>5</td>
                 <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
               </tr>
             </tbody>
             <tfoot>
               <tr class="tbl-total-row">
                 <td colspan="3" class="text-right" style="color: var(--red); font-weight: 800; font-size: 12px; padding-right: 14px;">TỔNG CỘNG</td>
-                <td class="text-center tbl-num-red" style="font-size: 14px;" id="totalSec4">37</td>
+                <td class="text-center tbl-num-red" style="font-size: 14px;" id="totalSec4">63</td>
               </tr>
             </tfoot>
           </table>
@@ -2033,8 +2048,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const rows = document.querySelectorAll('#tableSec1 tbody tr');
       let sum = 0;
       rows.forEach(r => {
-        const val = parseInt(r.cells[2].innerText.trim(), 10);
-        if (!isNaN(val)) sum += val;
+        const nums = r.cells[2]?.innerText?.match(/\d+/g);
+        if (nums) nums.forEach(n => sum += parseInt(n, 10));
       });
       document.getElementById('totalSec1').innerText = sum;
       document.getElementById('evalTotalManpower').innerText = sum;
@@ -2045,10 +2060,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const rows = document.querySelectorAll('#tableSec4 tbody tr');
       let sum = 0;
       rows.forEach(r => {
-        const val1 = parseInt(r.cells[1].innerText.trim(), 10);
-        const val2 = parseInt(r.cells[3].innerText.trim(), 10);
-        if (!isNaN(val1)) sum += val1;
-        if (!isNaN(val2)) sum += val2;
+        const nums1 = r.cells[1]?.innerText?.match(/\d+/g);
+        if (nums1) nums1.forEach(n => sum += parseInt(n, 10));
+        const nums2 = r.cells[3]?.innerText?.match(/\d+/g);
+        if (nums2) nums2.forEach(n => sum += parseInt(n, 10));
       });
       document.getElementById('totalSec4').innerText = sum;
     }
@@ -2517,10 +2532,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       // Mục 4: Kế hoạch ngày mai
       const sec4Rows = [];
       document.querySelectorAll('#tableSec4 tbody tr').forEach(tr => {
-        const col1Name = tr.cells[0]?.innerText?.trim() || '';
-        const col1Qty = tr.cells[1]?.innerText?.trim() || '0';
-        const col2Name = tr.cells[2]?.innerText?.trim() || '';
-        const col2Qty = tr.cells[3]?.innerText?.trim() || '0';
+        const col1Name = tr.cells[0]?.innerHTML?.trim() || '';
+        const col1Qty = tr.cells[1]?.innerHTML?.trim() || '0';
+        const col2Name = tr.cells[2]?.innerHTML?.trim() || '';
+        const col2Qty = tr.cells[3]?.innerHTML?.trim() || '0';
         sec4Rows.push({ col1Name, col1Qty, col2Name, col2Qty });
       });
 

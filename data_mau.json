@@ -1,8 +1,8 @@
 {
   "du_an": "Phát triển tích hợp thích ứng - tỉnh Bình Định",
-  "goi_thau": "BD-CW01: Đoạn đường từ quốc lộ 19C kết nối cảng Quy Nhơn (Km0-Km1+159.97)",
+  "goi_thau": "BD–CW01: Đoạn đường từ quốc lộ 19C kết nối cảng Quy Nhơn (Km0-Km1+159.97)",
   "nha_thau": "Công ty Cổ phần XDCT 510",
-  "ngay_bao_cao": "15/07/2026",
+  "ngay_bao_cao": "16/09/2026",
   "thoi_tiet": {
     "nang": true,
     "mua": false,
@@ -11,36 +11,39 @@
   },
   "thong_ke_nhan_luc": [
     { "stt": 1, "bo_phan": "Ban chỉ huy công trường", "so_luong": 2 },
-    { "stt": 2, "bo_phan": "Đội trưởng 22", "so_luong": 1 },
-    { "stt": 3, "bo_phan": "Công nhân đội 22", "so_luong": 15 },
-    { "stt": 4, "bo_phan": "Cơ giới", "so_luong": 4 },
-    { "stt": 5, "bo_phan": "Công ty Hà Thành", "so_luong": 8 },
-    { "stt": 6, "bo_phan": "Công ty Tấn Thành", "so_luong": 7 }
+    { "stt": 2, "bo_phan": "Đội trưởng + đội phó 22", "so_luong": 2 },
+    { "stt": 3, "bo_phan": "Công nhân đội 22", "so_luong": 25 },
+    { "stt": 4, "bo_phan": "Cơ giới", "so_luong": 6 },
+    { "stt": 5, "bo_phan": "Công ty Hà Thành", "so_luong": 20 },
+    { "stt": 6, "bo_phan": "Công ty Tấn Thành", "so_luong": 8 },
+    { "stt": 7, "bo_phan": "Đội trưởng đội 10", "so_luong": 1 },
+    { "stt": 8, "bo_phan": "Công nhân đội 10", "so_luong": 3 }
   ],
   "nhan_luc_theo_khu_vuc": [
-    { "khu_vuc": "Mũi 1", "noi_dung": "Thi công cọc khoan nhồi trụ T2", "so_luong": 15 },
-    { "khu_vuc": "Mũi 2", "noi_dung": "Thi công bệ đúc dầm", "so_luong": 8 },
-    { "khu_vuc": "Mũi 3", "noi_dung": "Thi công vết hàn cơ; gia công thép hào kỹ thuật", "so_luong": 7 }
+    { "khu_vuc": "Mũi 1-Đội 22", "noi_dung": "Thi công cọc khoan nhồi trụ T8<br>Thi công cọc khoan nhồi trụ T16<br>Thi công ván khuôn trụ T1<br>Thi công đà giáo trụ T2<br>Thi công khung giằng T3", "so_luong": 27 },
+    { "khu_vuc": "Mũi 2", "noi_dung": "Thi công sản xuất dầm 29 và 30", "so_luong": 20 },
+    { "khu_vuc": "Mũi 3", "noi_dung": "Thi công gia công thép cống hộp", "so_luong": 8 },
+    { "khu_vuc": "Mũi 4 - Đội 10", "noi_dung": "Công tác chuẩn bị", "so_luong": 4 }
   ],
   "danh_gia": {
-    "tong_nhan_luc": 37,
+    "tong_nhan_luc": 67,
     "dap_ung_tien_do": "co",
     "an_toan_lao_dong": "tot",
-    "nhan_cong_moi": "00",
+    "nhan_cong_moi": "4",
     "nhan_cong_nghi": "00",
     "ghi_chu_khac": ""
   },
   "ke_hoach_ngay_mai": {
-    "ngay": "16/07/2026",
+    "ngay": "17/09/2026",
     "danh_sach_trai": [
       { "bo_phan": "Ban chỉ huy công trường", "so_luong": 2 },
-      { "bo_phan": "Đội trưởng 22", "so_luong": 1 },
-      { "bo_phan": "Công nhân đội 22", "so_luong": 15 }
+      { "bo_phan": "Đội trưởng + đội phó 22<br>Đội trưởng đội 10", "so_luong": "2<br>1" },
+      { "bo_phan": "Công nhân đội 22<br>Công nhân đội 10", "so_luong": "25<br>5" }
     ],
     "danh_sach_phai": [
-      { "bo_phan": "Cơ giới", "so_luong": 4 },
-      { "bo_phan": "Công ty Hà Thành", "so_luong": 8 },
-      { "bo_phan": "Công ty Tấn Thành", "so_luong": 7 }
+      { "bo_phan": "Cơ giới", "so_luong": 6 },
+      { "bo_phan": "Công ty Hà Thành", "so_luong": 20 },
+      { "bo_phan": "Công ty Tấn Thành", "so_luong": 8 }
     ]
   },
   "xac_nhan": {
