@@ -516,6 +516,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       color: #FFFFFF;
     }
 
+    .btn-tool-history {
+      background: #F0FDF4;
+      color: #15803D;
+      border-color: #86EFAC;
+    }
+
+    .btn-tool-history:hover {
+      background: #DCFCE7;
+      border-color: #4ADE80;
+      color: #166534;
+    }
+
     .scale-selector-wrap {
       display: inline-flex;
       align-items: center;
@@ -1644,6 +1656,31 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
     }
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(15, 23, 42, 0.94);
+      color: #FFFFFF;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      z-index: 99999;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
 
   </style>
 </head>
@@ -1687,6 +1724,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           <polyline points="21 15 16 10 5 21"></polyline>
         </svg>
         In hình ảnh
+      </button>
+      <button class="btn-tool btn-tool-history" onclick="loadPreviousReport()" title="Dùng lại toàn bộ thông tin từ lần xuất file báo cáo gần nhất (tự động cập nhật ngày báo cáo sang hôm nay)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        Báo cáo trước
       </button>
       <button class="btn-tool" onclick="resetDefault()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2021,6 +2065,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       `;
       tbody.appendChild(tr);
       calcSec1();
+      triggerAutoSave();
     }
 
     // Thêm dòng mục 2
@@ -2034,6 +2079,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         <td class="tbl-num-red" contenteditable="true">0</td>
       `;
       tbody.appendChild(tr);
+      triggerAutoSave();
     }
 
     // Xóa dòng
@@ -2048,6 +2094,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         });
         calcSec1();
       }
+      triggerAutoSave();
     }
 
     // Checkbox toggle đơn/nhóm (Radio)
@@ -2058,6 +2105,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         opt.querySelector('.chk-icon').innerText = '☐';
       });
       element.querySelector('.chk-icon').innerText = '☑';
+      triggerAutoSave();
     }
 
     // Chọn thời tiết
@@ -2065,6 +2113,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       const items = element.parentElement.querySelectorAll('.weather-opt');
       items.forEach(it => it.classList.remove('selected'));
       element.classList.add('selected');
+      triggerAutoSave();
     }
 
     // Đồng bộ ngày mai (Today + 1, không khoảng cách)
@@ -2100,6 +2149,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     async function exportPDF() {
       const sheet = document.getElementById('reportSheet');
       if (!sheet) return;
+
+      // Lưu lại mốc "Báo cáo trước" khi xuất PDF
+      saveExportedReport();
 
       const wasSmartphone = document.body.classList.contains('mode-smartphone');
       if (wasSmartphone) {
@@ -2232,6 +2284,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     async function exportImage() {
       const sheet = document.getElementById('reportSheet');
       if (!sheet) return;
+
+      // Lưu lại mốc "Báo cáo trước" khi xuất ảnh
+      saveExportedReport();
 
       // Nếu đang xem ở chế độ Smartphone, tạm chuyển sang Desktop để chụp nguyên bản A4 Portrait
       const wasSmartphone = document.body.classList.contains('mode-smartphone');
@@ -2389,9 +2444,303 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       syncTomorrowDate(meta ? meta.innerText : '');
     }
 
+    // ==========================================
+    // QUẢN LÝ LƯU & TẢI LẠI FORM HÔM QUA (LOCALSTORAGE)
+    // ==========================================
+
+    function getFormDataObject() {
+      // 1. Meta thông tin dự án
+      const duAn = document.getElementById('metaDuAn')?.innerText?.trim() || '';
+      const ngayBaoCao = document.getElementById('metaNgayBaoCao')?.innerText?.trim() || '';
+      const goiThau1 = document.getElementById('metaGoiThau1')?.innerText?.trim() || '';
+      const goiThau2 = document.getElementById('metaGoiThau2')?.innerText?.trim() || '';
+      const nhaThau = document.getElementById('metaNhaThau')?.innerText?.trim() || '';
+      
+      // Thời tiết
+      const weatherOpts = document.querySelectorAll('.weather-box .weather-opt');
+      let selectedWeatherIdx = 0;
+      weatherOpts.forEach((opt, idx) => {
+        if (opt.classList.contains('selected')) selectedWeatherIdx = idx;
+      });
+      const weatherKhac = document.getElementById('weatherKhac')?.innerText?.trim() || '';
+
+      // Mục 1: Bảng nhân lực
+      const sec1Rows = [];
+      document.querySelectorAll('#tableSec1 tbody tr').forEach(tr => {
+        const stt = tr.cells[0]?.innerText?.trim() || '';
+        const nameTd = tr.cells[1];
+        let name = '';
+        if (nameTd) {
+          const clone = nameTd.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          name = clone.innerText.trim();
+        }
+        const qty = tr.cells[2]?.innerText?.trim() || '0';
+        sec1Rows.push({ stt, name, qty });
+      });
+
+      // Mục 2: Nhân lực theo khu vực thi công
+      const sec2Rows = [];
+      document.querySelectorAll('#tableSec2 tbody tr').forEach(tr => {
+        const mui = tr.cells[0]?.innerText?.trim() || '';
+        const descTd = tr.cells[1];
+        let desc = '';
+        if (descTd) {
+          const clone = descTd.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          desc = clone.innerHTML.trim();
+        }
+        const qty = tr.cells[2]?.innerText?.trim() || '0';
+        sec2Rows.push({ mui, desc, qty });
+      });
+
+      // Mục 3: Đánh giá tình hình nhân lực
+      const evalMoiVao = document.getElementById('evalMoiVao')?.innerText?.trim() || '00';
+      const evalNghiViec = document.getElementById('evalNghiViec')?.innerText?.trim() || '00';
+      const evalGhiChu = document.getElementById('evalGhiChu')?.innerText?.trim() || '';
+
+      // Checkbox Tiến độ & ATLĐ
+      let tiendoOpt = 0;
+      const tiendoOpts = document.querySelectorAll('#blockSec3 .eval-col:nth-child(2) .eval-row:nth-child(1) .chk-opt');
+      tiendoOpts.forEach((opt, idx) => {
+        if (opt.querySelector('.chk-icon')?.innerText === '☑') tiendoOpt = idx;
+      });
+
+      let atldOpt = 0;
+      const atldOpts = document.querySelectorAll('#blockSec3 .eval-col:nth-child(2) .eval-row:nth-child(2) .chk-opt');
+      atldOpts.forEach((opt, idx) => {
+        if (opt.querySelector('.chk-icon')?.innerText === '☑') atldOpt = idx;
+      });
+
+      // Mục 4: Kế hoạch ngày mai
+      const sec4Rows = [];
+      document.querySelectorAll('#tableSec4 tbody tr').forEach(tr => {
+        const col1Name = tr.cells[0]?.innerText?.trim() || '';
+        const col1Qty = tr.cells[1]?.innerText?.trim() || '0';
+        const col2Name = tr.cells[2]?.innerText?.trim() || '';
+        const col2Qty = tr.cells[3]?.innerText?.trim() || '0';
+        sec4Rows.push({ col1Name, col1Qty, col2Name, col2Qty });
+      });
+
+      // Chữ ký / Người ký
+      const signerRole = document.getElementById('signerRole')?.innerText?.trim() || '';
+      const signerName = document.getElementById('signerName')?.innerText?.trim() || '';
+
+      return {
+        savedAt: new Date().toISOString(),
+        duAn,
+        ngayBaoCao,
+        goiThau1,
+        goiThau2,
+        nhaThau,
+        selectedWeatherIdx,
+        weatherKhac,
+        sec1Rows,
+        sec2Rows,
+        evalMoiVao,
+        evalNghiViec,
+        evalGhiChu,
+        tiendoOpt,
+        atldOpt,
+        sec4Rows,
+        signerRole,
+        signerName
+      };
+    }
+
+    // Tự động lưu bản nháp chỉnh sửa vào localStorage
+    function saveCurrentForm() {
+      try {
+        const data = getFormDataObject();
+        localStorage.setItem('cienco510_draft_form', JSON.stringify(data));
+        // Đồng thời làm mốc dự phòng nếu chưa từng xuất file
+        if (!localStorage.getItem('cienco510_last_exported_report')) {
+          localStorage.setItem('cienco510_last_exported_report', JSON.stringify(data));
+        }
+      } catch (e) {
+        console.error('Không thể lưu form:', e);
+      }
+    }
+
+    // Lưu mốc chính thức khi xuất PDF hoặc xuất ảnh (Lần xuất file gần nhất)
+    function saveExportedReport() {
+      try {
+        const data = getFormDataObject();
+        data.savedAt = new Date().toISOString();
+        localStorage.setItem('cienco510_last_exported_report', JSON.stringify(data));
+      } catch (e) {
+        console.error('Không thể lưu báo cáo xuất file:', e);
+      }
+    }
+
+    let autoSaveTimer = null;
+    function triggerAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveCurrentForm();
+      }, 400);
+    }
+
+    // Dùng lại thông tin từ lần xuất file gần nhất (Báo cáo trước)
+    function loadPreviousReport() {
+      try {
+        const savedStr = localStorage.getItem('cienco510_last_exported_report') || localStorage.getItem('cienco510_draft_form') || localStorage.getItem('cienco510_yesterday_form');
+        if (!savedStr) {
+          alert('Chưa có dữ liệu "Báo cáo trước" (lần xuất file gần nhất) trên trình duyệt này.\n\n👉 Khi bạn bấm "In / Xuất PDF" hoặc "In hình ảnh", hệ thống sẽ tự động lưu lại toàn bộ báo cáo đó để dùng lại bất cứ khi nào!');
+          return;
+        }
+
+        const data = JSON.parse(savedStr);
+        let timeInfo = '';
+        if (data.savedAt) {
+          try {
+            const d = new Date(data.savedAt);
+            const dateStr = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+            const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            timeInfo = ` (lần xuất lúc ${timeStr} ngày ${dateStr})`;
+          } catch(e) {}
+        }
+
+        if (confirm(`Bạn có muốn dùng lại form "Báo cáo trước"${timeInfo} không?\n\nToàn bộ danh sách tổ đội, nội dung công việc và số lượng sẽ được nạp lại; Ngày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.`)) {
+          applyFormData(data, true);
+          showToast('Đã nạp lại thành công dữ liệu Báo cáo trước!');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Lỗi tải dữ liệu Báo cáo trước: ' + e.message);
+      }
+    }
+    const loadYesterdayForm = loadPreviousReport; // Alias tương thích ngược
+
+    function applyFormData(data, updateDateToToday = true) {
+      if (!data) return;
+
+      if (data.duAn) document.getElementById('metaDuAn').innerText = data.duAn;
+      if (data.goiThau1) document.getElementById('metaGoiThau1').innerText = data.goiThau1;
+      if (data.goiThau2) document.getElementById('metaGoiThau2').innerText = data.goiThau2;
+      if (data.nhaThau) document.getElementById('metaNhaThau').innerText = data.nhaThau;
+
+      const metaDate = document.getElementById('metaNgayBaoCao');
+      if (updateDateToToday) {
+        const today = new Date();
+        const d = String(today.getDate()).padStart(2, '0');
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const y = today.getFullYear();
+        metaDate.innerText = `${d}/${m}/${y}`;
+        metaDate.dataset.userEdited = 'true';
+        syncTomorrowDate(metaDate.innerText);
+      } else if (data.ngayBaoCao) {
+        metaDate.innerText = data.ngayBaoCao;
+        syncTomorrowDate(data.ngayBaoCao);
+      }
+
+      // Weather
+      const weatherOpts = document.querySelectorAll('.weather-box .weather-opt');
+      weatherOpts.forEach((opt, idx) => {
+        if (idx === data.selectedWeatherIdx) {
+          opt.classList.add('selected');
+        } else {
+          opt.classList.remove('selected');
+        }
+      });
+      if (data.weatherKhac !== undefined) {
+        const wKhac = document.getElementById('weatherKhac');
+        if (wKhac) wKhac.innerText = data.weatherKhac;
+      }
+
+      // Mục 1: Bảng thống kê nhân lực
+      if (data.sec1Rows && data.sec1Rows.length > 0) {
+        const tbody1 = document.querySelector('#tableSec1 tbody');
+        tbody1.innerHTML = '';
+        data.sec1Rows.forEach((r, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="text-center" contenteditable="true">${r.stt || (idx + 1)}</td>
+            <td class="text-left" contenteditable="true">${r.name} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+            <td class="tbl-num-red" contenteditable="true" oninput="calcSec1()">${r.qty}</td>
+          `;
+          tbody1.appendChild(tr);
+        });
+      }
+
+      // Mục 2: Nhân lực theo khu vực thi công
+      if (data.sec2Rows && data.sec2Rows.length > 0) {
+        const tbody2 = document.querySelector('#tableSec2 tbody');
+        tbody2.innerHTML = '';
+        data.sec2Rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="text-center" contenteditable="true">${r.mui}</td>
+            <td class="text-left" contenteditable="true">${r.desc} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+            <td class="tbl-num-red" contenteditable="true">${r.qty}</td>
+          `;
+          tbody2.appendChild(tr);
+        });
+      }
+
+      // Mục 3: Đánh giá tình hình nhân lực
+      if (data.evalMoiVao !== undefined) document.getElementById('evalMoiVao').innerText = data.evalMoiVao;
+      if (data.evalNghiViec !== undefined) document.getElementById('evalNghiViec').innerText = data.evalNghiViec;
+      if (data.evalGhiChu !== undefined) document.getElementById('evalGhiChu').innerText = data.evalGhiChu;
+
+      // Checkboxes
+      const tiendoOpts = document.querySelectorAll('#blockSec3 .eval-col:nth-child(2) .eval-row:nth-child(1) .chk-opt');
+      tiendoOpts.forEach((opt, idx) => {
+        const icon = opt.querySelector('.chk-icon');
+        if (icon) icon.innerText = (idx === data.tiendoOpt) ? '☑' : '☐';
+      });
+
+      const atldOpts = document.querySelectorAll('#blockSec3 .eval-col:nth-child(2) .eval-row:nth-child(2) .chk-opt');
+      atldOpts.forEach((opt, idx) => {
+        const icon = opt.querySelector('.chk-icon');
+        if (icon) icon.innerText = (idx === data.atldOpt) ? '☑' : '☐';
+      });
+
+      // Mục 4: Kế hoạch ngày mai
+      if (data.sec4Rows && data.sec4Rows.length > 0) {
+        const tbody4 = document.querySelector('#tableSec4 tbody');
+        tbody4.innerHTML = '';
+        data.sec4Rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="text-left" contenteditable="true">${r.col1Name}</td>
+            <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.col1Qty}</td>
+            <td class="text-left" contenteditable="true">${r.col2Name}</td>
+            <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.col2Qty}</td>
+          `;
+          tbody4.appendChild(tr);
+        });
+      }
+
+      // Signer
+      if (data.signerRole) document.getElementById('signerRole').innerText = data.signerRole;
+      if (data.signerName) document.getElementById('signerName').innerText = data.signerName;
+
+      // Tính lại tổng
+      calcSec1();
+      calcSec4();
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('toastMsg');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMsg';
+        toast.className = 'toast-msg';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span>✨</span> <span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
     // Reset về mặc định
     function resetDefault() {
-      if (confirm('Bạn có muốn khôi phục về dữ liệu mẫu ban đầu không?')) {
+      if (confirm('Bạn có muốn khôi phục về dữ liệu mẫu ban đầu không? (Dữ liệu form hôm qua đã lưu vẫn được giữ để bạn có thể tải lại khi cần)')) {
         location.reload();
       }
     }
@@ -2401,6 +2750,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       initViewMode();
       calcSec1();
       calcSec4();
+
+      // Gán sự kiện tự động lưu khi chỉnh sửa
+      const sheet = document.getElementById('reportSheet');
+      if (sheet) {
+        sheet.addEventListener('input', triggerAutoSave);
+      }
+
+      // Tự động lưu bản ghi khởi đầu
+      triggerAutoSave();
     });
   </script>
 
