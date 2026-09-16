@@ -1682,6 +1682,94 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       opacity: 1;
     }
 
+    /* MODAL LỊCH SỬ LƯU MẪU */
+    .template-modal-table-wrap {
+      max-height: 380px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .tbl-templates {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    .tbl-templates th {
+      background: #f1f5f9;
+      color: #002060;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-bottom: 2px solid #cbd5e1;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .tbl-templates td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+    .tbl-templates tr:hover td {
+      background: #f8fafc;
+    }
+    .btn-tbl-action {
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-tbl-open {
+      background: #e0f2fe;
+      color: #0284c7;
+      border: 1px solid #bae6fd;
+    }
+    .btn-tbl-open:hover {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-tbl-del {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+    .btn-tbl-del:hover {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    .btn-save-current-tpl {
+      background: #002060;
+      color: #ffffff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease;
+    }
+    .btn-save-current-tpl:hover {
+      background: #093b8c;
+    }
+    .btn-tool-save-template {
+      background: #065f46;
+      border-color: #047857;
+      color: #ffffff;
+    }
+    .btn-tool-save-template:hover {
+      background: #047857;
+    }
+
   </style>
 </head>
 <body>
@@ -1725,14 +1813,22 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         </svg>
         In hình ảnh
       </button>
-      <button class="btn-tool btn-tool-history" onclick="loadPreviousReport()" title="Dùng lại toàn bộ thông tin từ lần xuất file báo cáo gần nhất (tự động cập nhật ngày báo cáo sang hôm nay)">
+      <button class="btn-tool btn-tool-history" onclick="loadPreviousReport()" title="Dùng lại toàn bộ thông tin từ lần ghi nhớ/chỉnh sửa gần nhất (tự động cập nhật ngày báo cáo sang hôm nay)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
         Báo cáo trước
       </button>
-      <button class="btn-tool" onclick="resetDefault()">
+      <button class="btn-tool btn-tool-save-template" onclick="openSaveTemplateModal()" title="Lưu báo cáo hiện tại thành mẫu hoặc quản lý danh sách lịch sử lưu mẫu">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        Lưu thành mẫu
+      </button>
+      <button class="btn-tool" onclick="resetDefault()" title="Khôi phục toàn bộ biểu mẫu về Mẫu ban đầu mặc định">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="1 4 1 10 7 10"></polyline>
           <polyline points="23 20 23 14 17 14"></polyline>
@@ -2753,10 +2849,200 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       }, 3000);
     }
 
-    // Reset về mặc định
+    // ==========================================
+    // DỮ LIỆU MẪU BAN ĐẦU MẶC ĐỊNH (CHUẨN 67 NGƯỜI)
+    // ==========================================
+    const DEFAULT_TEMPLATE_DATA = {
+      duAn: "Phát triển tích hợp thích ứng - tỉnh Bình Định",
+      ngayBaoCao: "16/09/2026",
+      goiThau1: "BD–CW01: Đoạn đường từ quốc lộ 19C",
+      goiThau2: "kết nối cảng Quy Nhơn (Km0-Km1+159.97)",
+      nhaThau: "Công ty Cổ phần XDCT 510",
+      selectedWeatherIdx: 0,
+      weatherKhac: ".........",
+      sec1Rows: [
+        { stt: 1, name: "Ban chỉ huy công trường", qty: 2 },
+        { stt: 2, name: "Đội trưởng + đội phó 22", qty: 2 },
+        { stt: 3, name: "Công nhân đội 22", qty: 25 },
+        { stt: 4, name: "Cơ giới", qty: 6 },
+        { stt: 5, name: "Công ty Hà Thành", qty: 20 },
+        { stt: 6, name: "Công ty Tấn Thành", qty: 8 },
+        { stt: 7, name: "Đội trưởng đội 10", qty: 1 },
+        { stt: 8, name: "Công nhân đội 10", qty: 3 }
+      ],
+      sec2Rows: [
+        { mui: "Mũi 1-Đội 22", desc: "Thi công cọc khoan nhồi trụ T8<br>Thi công cọc khoan nhồi trụ T16<br>Thi công ván khuôn trụ T1<br>Thi công đà giáo trụ T2<br>Thi công khung giằng T3", qty: 27 },
+        { mui: "Mũi 2", desc: "Thi công sản xuất dầm 29 và 30", qty: 20 },
+        { mui: "Mũi 3", desc: "Thi công gia công thép cống hộp", qty: 8 },
+        { mui: "Mũi 4 - Đội 10", desc: "Công tác chuẩn bị", qty: 4 }
+      ],
+      evalMoiVao: "4",
+      evalNghiViec: "00",
+      evalGhiChu: "",
+      tiendoOpt: 0,
+      atldOpt: 0,
+      sec4Rows: [
+        { col1Name: "Ban chỉ huy công trường", col1Qty: "2", col2Name: "Cơ giới", col2Qty: "6" },
+        { col1Name: "Đội trưởng + đội phó 22<br>Đội trưởng đội 10", col1Qty: "2<br>1", col2Name: "Công ty Hà Thành", col2Qty: "20" },
+        { col1Name: "Công nhân đội 22<br>Công nhân đội 10", col1Qty: "25<br>5", col2Name: "Công ty Tấn Thành", col2Qty: "8" }
+      ],
+      signerRole: "CHỈ HUY TRƯỞNG CÔNG TRƯỜNG",
+      signerName: "Nguyễn Anh Tuấn"
+    };
+
+    // Reset về mẫu ban đầu
     function resetDefault() {
-      if (confirm('Bạn có muốn khôi phục về dữ liệu mẫu ban đầu không? (Dữ liệu form hôm qua đã lưu vẫn được giữ để bạn có thể tải lại khi cần)')) {
-        location.reload();
+      if (confirm('Bạn có muốn khôi phục về dữ liệu "Mẫu ban đầu" mặc định không?\n\nToàn bộ các trường sẽ được điền lại theo mẫu chuẩn ban đầu.')) {
+        applyFormData(DEFAULT_TEMPLATE_DATA, true);
+        showToast('Đã khôi phục về Mẫu ban đầu thành công!');
+      }
+    }
+
+    // ==========================================
+    // QUẢN LÝ LỊCH SỬ LƯU MẪU (TỐI ĐA 10 BẢN GHI)
+    // ==========================================
+    const CUSTOM_TEMPLATES_KEY = 'cienco510_custom_templates';
+    const MAX_TEMPLATES = 10;
+
+    function getSavedTemplates() {
+      try {
+        const str = localStorage.getItem(CUSTOM_TEMPLATES_KEY);
+        return str ? JSON.parse(str) : [];
+      } catch (e) {
+        console.error('Lỗi đọc danh sách mẫu:', e);
+        return [];
+      }
+    }
+
+    function saveTemplatesList(list) {
+      try {
+        localStorage.setItem(CUSTOM_TEMPLATES_KEY, JSON.stringify(list));
+      } catch (e) {
+        console.error('Lỗi lưu danh sách mẫu:', e);
+      }
+    }
+
+    // Mở modal Lịch sử lưu mẫu
+    function openSaveTemplateModal() {
+      renderSavedTemplatesTable();
+      const modal = document.getElementById('savedTemplatesModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeSaveTemplateModal() {
+      const modal = document.getElementById('savedTemplatesModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    // Lưu báo cáo hiện tại vào danh sách mẫu (Tối đa 10 dòng, tự xoá dòng cũ nhất nếu quá 10)
+    function saveCurrentAsTemplate() {
+      const data = getFormDataObject();
+      const now = new Date();
+      const d = String(now.getDate()).padStart(2, '0');
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const y = now.getFullYear();
+      const h = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const formattedDate = `${d}/${m}/${y} ${h}:${min}`;
+
+      // Tính tổng nhân sự của mẫu này
+      let totalManpower = 0;
+      if (data.sec1Rows) {
+        data.sec1Rows.forEach(r => {
+          const nums = String(r.qty).match(/\d+/g);
+          if (nums) nums.forEach(n => totalManpower += parseInt(n, 10));
+        });
+      }
+
+      const templateItem = {
+        id: 'tpl_' + Date.now(),
+        savedAt: formattedDate,
+        totalManpower: totalManpower,
+        data: data
+      };
+
+      let list = getSavedTemplates();
+      // Thêm mẫu mới lên đầu danh sách
+      list.unshift(templateItem);
+
+      // Nếu vượt quá 10 dòng, tự động xóa bản lưu cũ nhất ở cuối danh sách
+      if (list.length > MAX_TEMPLATES) {
+        list = list.slice(0, MAX_TEMPLATES);
+      }
+
+      saveTemplatesList(list);
+      renderSavedTemplatesTable();
+      showToast(`Đã lưu thành mẫu (${totalManpower} nhân sự)!`);
+    }
+
+    // Render bảng Lịch sử lưu mẫu
+    function renderSavedTemplatesTable() {
+      const list = getSavedTemplates();
+      const tbody = document.getElementById('savedTemplatesTbody');
+      const countEl = document.getElementById('savedTemplatesCount');
+      if (countEl) countEl.innerText = `${list.length}/${MAX_TEMPLATES}`;
+
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 24px; color: #64748b;">
+              <div style="font-size: 24px; margin-bottom: 6px;">📂</div>
+              Chưa có mẫu nào được lưu.<br>
+              Bấm nút <b>"Lưu báo cáo hiện tại"</b> bên trên để lưu mẫu đầu tiên!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      list.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center; font-weight: 700; width: 45px;">${idx + 1}</td>
+          <td style="font-weight: 600; color: #002060;">${item.savedAt || '—'}</td>
+          <td style="text-align: center; font-weight: 700; color: #dc2626;">${item.totalManpower || 0} người</td>
+          <td style="text-align: center; width: 75px;">
+            <button class="btn-tbl-action btn-tbl-open" onclick="loadCustomTemplate(${idx})" title="Nạp mẫu này vào báo cáo">
+              📂 Mở
+            </button>
+          </td>
+          <td style="text-align: center; width: 75px;">
+            <button class="btn-tbl-action btn-tbl-del" onclick="deleteCustomTemplate(${idx})" title="Xoá mẫu này">
+              🗑️ Xóa
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Mở / nạp mẫu đã lưu
+    function loadCustomTemplate(idx) {
+      const list = getSavedTemplates();
+      if (!list[idx]) return;
+
+      const item = list[idx];
+      if (confirm(`Bạn có muốn mở mẫu ngày [${item.savedAt}] (Tổng số: ${item.totalManpower} người) không?\n\nNgày báo cáo sẽ tự động được cập nhật sang ngày hôm nay.`)) {
+        applyFormData(item.data, true);
+        closeSaveTemplateModal();
+        showToast(`Đã mở mẫu [${item.savedAt}] thành công!`);
+      }
+    }
+
+    // Xoá mẫu đã lưu
+    function deleteCustomTemplate(idx) {
+      const list = getSavedTemplates();
+      if (!list[idx]) return;
+
+      const item = list[idx];
+      if (confirm(`Bạn có chắc chắn muốn xóa mẫu ngày [${item.savedAt}] (${item.totalManpower} người) khỏi danh sách không?`)) {
+        list.splice(idx, 1);
+        saveTemplatesList(list);
+        renderSavedTemplatesTable();
+        showToast('Đã xóa mẫu thành công!');
       }
     }
 
@@ -2776,6 +3062,48 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       triggerAutoSave();
     });
   </script>
+
+  <!-- MODAL QUẢN LÝ & LỊCH SỬ LƯU MẪU (TỐI ĐA 10 DÒNG) -->
+  <div id="savedTemplatesModal" class="img-modal-overlay" style="display:none;" onclick="if(event.target === this) closeSaveTemplateModal()">
+    <div class="img-modal-content" style="max-width: 620px;">
+      <div class="img-modal-header">
+        <div style="font-weight: 700; color: #002060; font-size: 15px; display:flex; align-items:center; gap:8px;">
+          <span>📋</span> LỊCH SỬ LƯU MẪU BÁO CÁO
+        </div>
+        <button class="btn-modal-close" onclick="closeSaveTemplateModal()" title="Đóng">✕</button>
+      </div>
+      <div class="img-modal-body" style="padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <button class="btn-save-current-tpl" onclick="saveCurrentAsTemplate()">
+            <span>💾</span> Lưu báo cáo hiện tại vào danh sách
+          </button>
+          <div style="font-size: 12.5px; color: #64748b; font-weight: 500;">
+            Đã lưu: <b id="savedTemplatesCount" style="color: #002060;">0/10</b> (Tự xóa bản cũ nhất khi đầy 10)
+          </div>
+        </div>
+        
+        <div class="template-modal-table-wrap">
+          <table class="tbl-templates">
+            <thead>
+              <tr>
+                <th style="text-align: center; width: 45px;">STT</th>
+                <th>Ngày tháng năm</th>
+                <th style="text-align: center;">Tổng số nhân sự</th>
+                <th style="text-align: center; width: 75px;">Mở</th>
+                <th style="text-align: center; width: 75px;">Xóa</th>
+              </tr>
+            </thead>
+            <tbody id="savedTemplatesTbody">
+              <!-- Dữ liệu render động qua JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="img-modal-footer">
+        <button class="btn-action" onclick="closeSaveTemplateModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL XEM & LƯU HÌNH ẢNH DÀNH CHO IPHONE / WEBAPP / MÁY TÍNH -->
   <div id="imagePreviewModal" class="img-modal-overlay" style="display:none;" onclick="if(event.target === this) closeImageModal()">
