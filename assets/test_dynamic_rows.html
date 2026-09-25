@@ -755,7 +755,9 @@
         <div class="sec-block" id="blockSec4">
           <div class="section-pill">
             4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (<span id="tomorrowPillDate">16/07/2026</span>)
-            <button class="btn-add-pill" onclick="addRowSec4()" title="Thêm dòng">+ Thêm</button>
+            <button class="btn-add-pill" onclick="addRowSec4()" title="Thêm cả dòng (2 vế)">+ Dòng</button>
+            <button class="btn-add-pill" onclick="addLeftSec4()" title="Thêm tổ đội vế trái">+ Trái</button>
+            <button class="btn-add-pill" onclick="addRightSec4()" title="Thêm tổ đội vế phải">+ Phải</button>
           </div>
           <div class="tbl-container">
             <table class="tbl-clean" id="tableSec4">
@@ -769,21 +771,21 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
+                  <td class="text-left" contenteditable="true">Ban chỉ huy công trường <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
-                  <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
                 </tr>
                 <tr>
-                  <td class="text-left" contenteditable="true">Đội trưởng 22</td>
+                  <td class="text-left" contenteditable="true">Đội trưởng 22 <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
-                  <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
                 </tr>
                 <tr>
-                  <td class="text-left" contenteditable="true">Công nhân đội 22</td>
+                  <td class="text-left" contenteditable="true">Công nhân đội 22 <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
-                  <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+                  <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
                 </tr>
               </tbody>
@@ -954,17 +956,100 @@
       tbody.appendChild(tr);
     }
 
-    // Thêm dòng mục 4
+    // Thêm cả dòng (2 vế) mục 4
     function addRowSec4() {
       const tbody = document.querySelector('#tableSec4 tbody');
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="text-left" contenteditable="true">Tổ đội mới</td>
+        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button></td>
         <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
-        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button></td>
         <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
       `;
       tbody.appendChild(tr);
+      calcSec4();
+    }
+
+    // Thêm vế trái mục 4
+    function addLeftSec4() {
+      const tbody = document.querySelector('#tableSec4 tbody');
+      let targetRow = null;
+      for (const r of tbody.rows) {
+        const leftName = r.cells[0]?.innerText?.replace('×', '').trim();
+        const leftQty = r.cells[1]?.innerText?.trim();
+        if (!leftName && (!leftQty || leftQty === '0')) {
+          targetRow = r;
+          break;
+        }
+      }
+
+      if (targetRow) {
+        targetRow.cells[0].innerHTML = `Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button>`;
+        targetRow.cells[1].innerText = '0';
+      } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button></td>
+          <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+          <td class="text-left" contenteditable="true"></td>
+          <td class="text-center" contenteditable="true" oninput="calcSec4()"></td>
+        `;
+        tbody.appendChild(tr);
+      }
+      calcSec4();
+    }
+
+    // Thêm vế phải mục 4
+    function addRightSec4() {
+      const tbody = document.querySelector('#tableSec4 tbody');
+      let targetRow = null;
+      for (const r of tbody.rows) {
+        const rightName = r.cells[2]?.innerText?.replace('×', '').trim();
+        const rightQty = r.cells[3]?.innerText?.trim();
+        if (!rightName && (!rightQty || rightQty === '0')) {
+          targetRow = r;
+          break;
+        }
+      }
+
+      if (targetRow) {
+        targetRow.cells[2].innerHTML = `Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button>`;
+        targetRow.cells[3].innerText = '0';
+      } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="text-left" contenteditable="true"></td>
+          <td class="text-center" contenteditable="true" oninput="calcSec4()"></td>
+          <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button></td>
+          <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+        `;
+        tbody.appendChild(tr);
+      }
+      calcSec4();
+    }
+
+    // Xóa vế trái hoặc vế phải trong mục 4
+    function delSec4Item(btn, side) {
+      const tr = btn.closest('tr');
+      if (side === 'left') {
+        const rightName = tr.cells[2]?.innerText?.replace('×', '').trim() || '';
+        const rightQty = tr.cells[3]?.innerText?.trim() || '';
+        if (!rightName && (!rightQty || rightQty === '0')) {
+          tr.remove();
+        } else {
+          tr.cells[0].innerHTML = '';
+          tr.cells[1].innerText = '';
+        }
+      } else if (side === 'right') {
+        const leftName = tr.cells[0]?.innerText?.replace('×', '').trim() || '';
+        const leftQty = tr.cells[1]?.innerText?.trim() || '';
+        if (!leftName && (!leftQty || leftQty === '0')) {
+          tr.remove();
+        } else {
+          tr.cells[2].innerHTML = '';
+          tr.cells[3].innerText = '';
+        }
+      }
       calcSec4();
     }
 
@@ -1136,11 +1221,13 @@
             tb.innerHTML = '';
             d.sec4Rows.forEach(r => {
               const tr = document.createElement('tr');
+              const col1Btn = r.bp1 ? `<button class="btn-del-row" onclick="delSec4Item(this, 'left')">×</button>` : '';
+              const col2Btn = r.bp2 ? `<button class="btn-del-row" onclick="delSec4Item(this, 'right')">×</button>` : '';
               tr.innerHTML = `
-                <td class="text-left" contenteditable="true">${r.bp1}</td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty1}</td>
-                <td class="text-left" contenteditable="true">${r.bp2} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
-                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty2}</td>
+                <td class="text-left" contenteditable="true">${r.bp1 ? r.bp1 + ' ' + col1Btn : ''}</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty1 || ''}</td>
+                <td class="text-left" contenteditable="true">${r.bp2 ? r.bp2 + ' ' + col2Btn : ''}</td>
+                <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty2 || ''}</td>
               `;
               tb.appendChild(tr);
             });

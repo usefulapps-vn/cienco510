@@ -34,8 +34,12 @@ hanario/Documents/quyen/
 - **Thông tin chung**: Nhấp chuột trực tiếp vào các mục màu đỏ: *Tên dự án, Gói thầu, Nhà thầu, Ngày báo cáo* để sửa.
 - **Thời tiết**: Tích chọn trực tiếp vào các ô `☀️ Nắng`, `🌧️ Mưa`, `☁️ Âm u` hoặc nhập vào mục `Khác`.
 - **Thêm / Xóa dòng**:
-  - Bấm nút `+ Thêm dòng` ở góc phải tiêu đề mỗi phần (Phần 1, 2, 4) để thêm công việc hoặc tổ đội mới.
-  - Bấm biểu tượng dấu `×` màu xám ở cuối mỗi hàng để xóa dòng đó.
+  - **Mục 1 & 2**: Bấm nút `+ Thêm` ở tiêu đề để thêm hàng mới.
+  - **Mục 4 (Kế hoạch ngày mai)**: Gồm 3 nút linh hoạt:
+    + `+ Dòng`: Thêm cả 1 hàng gồm 2 vế (vế trái và vế phải).
+    + `+ Trái`: Thêm tổ đội chỉ vào vế trái (tự điền vào ô trống hoặc tạo hàng mới).
+    + `+ Phải`: Thêm tổ đội chỉ vào vế phải (tự điền vào ô trống hoặc tạo hàng mới).
+  - Bấm biểu tượng dấu `×` màu xám ở mỗi tổ đội/công việc để xóa nhanh vế đó hoặc xóa cả dòng nếu không còn dữ liệu.
 - **Tự động tính toán**: 
   - Khi bạn thay đổi số lượng nhân lực ở các bảng, dòng **TỔNG CỘNG** và chỉ số tại mục **3. Đánh giá tình hình nhân lực** sẽ **tự động cập nhật ngay lập tức**.
   - Tiêu đề mục **4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (ngày/tháng/năm)** sẽ tự động tính ngày tiếp theo dựa trên ngày báo cáo bạn nhập.
