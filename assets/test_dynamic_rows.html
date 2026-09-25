@@ -755,6 +755,7 @@
         <div class="sec-block" id="blockSec4">
           <div class="section-pill">
             4. KẾ HOẠCH NHÂN LỰC NGÀY MAI (<span id="tomorrowPillDate">16/07/2026</span>)
+            <button class="btn-add-pill" onclick="addRowSec4()" title="Thêm dòng">+ Thêm</button>
           </div>
           <div class="tbl-container">
             <table class="tbl-clean" id="tableSec4">
@@ -770,19 +771,19 @@
                 <tr>
                   <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
-                  <td class="text-left" contenteditable="true">Cơ giới</td>
+                  <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">4</td>
                 </tr>
                 <tr>
                   <td class="text-left" contenteditable="true">Đội trưởng 22</td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">1</td>
-                  <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
+                  <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
                 </tr>
                 <tr>
                   <td class="text-left" contenteditable="true">Công nhân đội 22</td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">15</td>
-                  <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
+                  <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                   <td class="text-center" contenteditable="true" oninput="calcSec4()">7</td>
                 </tr>
               </tbody>
@@ -953,17 +954,35 @@
       tbody.appendChild(tr);
     }
 
+    // Thêm dòng mục 4
+    function addRowSec4() {
+      const tbody = document.querySelector('#tableSec4 tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="text-left" contenteditable="true">Tổ đội mới</td>
+        <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+        <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+      `;
+      tbody.appendChild(tr);
+      calcSec4();
+    }
+
     // Xóa dòng
     function delRow(btn) {
       const tr = btn.closest('tr');
       const tbody = tr.parentElement;
+      const table = tbody.closest('table');
+      const tableId = table ? table.id : tbody.parentElement.id;
       tr.remove();
       // Đánh số lại STT nếu là bảng 1
-      if (tbody.parentElement.id === 'tableSec1') {
+      if (tableId === 'tableSec1') {
         Array.from(tbody.rows).forEach((r, idx) => {
           r.cells[0].innerText = idx + 1;
         });
         calcSec1();
+      } else if (tableId === 'tableSec4') {
+        calcSec4();
       }
     }
 
@@ -1037,12 +1056,26 @@
       });
 
       document.querySelectorAll('#tableSec4 tbody tr').forEach(r => {
-        data.sec4Rows.push({
-          bp1: r.cells[0].innerText,
-          qty1: r.cells[1].innerText,
-          bp2: r.cells[2].innerText,
-          qty2: r.cells[3].innerText
-        });
+        const bp1Td = r.cells[0];
+        let bp1 = '';
+        if (bp1Td) {
+          const clone = bp1Td.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          bp1 = clone.innerText.trim();
+        }
+        const qty1 = r.cells[1]?.innerText?.trim() || '0';
+
+        const bp2Td = r.cells[2];
+        let bp2 = '';
+        if (bp2Td) {
+          const clone = bp2Td.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          bp2 = clone.innerText.trim();
+        }
+        const qty2 = r.cells[3]?.innerText?.trim() || '0';
+        data.sec4Rows.push({ bp1, qty1, bp2, qty2 });
       });
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1106,7 +1139,7 @@
               tr.innerHTML = `
                 <td class="text-left" contenteditable="true">${r.bp1}</td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty1}</td>
-                <td class="text-left" contenteditable="true">${r.bp2}</td>
+                <td class="text-left" contenteditable="true">${r.bp2} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.qty2}</td>
               `;
               tb.appendChild(tr);

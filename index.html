@@ -2085,6 +2085,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <div class="sec-block" id="blockSec4">
         <div class="section-pill" id="pillSec4Block">
           4. KẾ HOẠCH NHÂN LỰC NGÀY MAI <span id="tomorrowPillDate">(17/09/2026)</span>
+          <button class="btn-add-pill" onclick="addRowSec4()" title="Thêm dòng">+ Thêm</button>
         </div>
         <div class="tbl-container" id="t4Container">
           <table class="tbl-clean" id="tableSec4">
@@ -2100,19 +2101,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               <tr>
                 <td class="text-left" contenteditable="true">Ban chỉ huy công trường</td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">2</td>
-                <td class="text-left" contenteditable="true">Cơ giới</td>
+                <td class="text-left" contenteditable="true">Cơ giới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">6</td>
               </tr>
               <tr>
                 <td class="text-left" contenteditable="true">Đội trưởng + đội phó 22<br>Đội trưởng đội 10</td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">2<br>1</td>
-                <td class="text-left" contenteditable="true">Công ty Hà Thành</td>
+                <td class="text-left" contenteditable="true">Công ty Hà Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">20</td>
               </tr>
               <tr>
                 <td class="text-left" contenteditable="true">Công nhân đội 22<br>Công nhân đội 10</td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">25<br>5</td>
-                <td class="text-left" contenteditable="true">Công ty Tấn Thành</td>
+                <td class="text-left" contenteditable="true">Công ty Tấn Thành <button class="btn-del-row" onclick="delRow(this)">×</button></td>
                 <td class="text-center" contenteditable="true" oninput="calcSec4()">8</td>
               </tr>
             </tbody>
@@ -2202,17 +2203,36 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       triggerAutoSave();
     }
 
+    // Thêm dòng mục 4
+    function addRowSec4() {
+      const tbody = document.querySelector('#tableSec4 tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="text-left" contenteditable="true">Tổ đội mới</td>
+        <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+        <td class="text-left" contenteditable="true">Tổ đội mới <button class="btn-del-row" onclick="delRow(this)">×</button></td>
+        <td class="text-center" contenteditable="true" oninput="calcSec4()">0</td>
+      `;
+      tbody.appendChild(tr);
+      calcSec4();
+      triggerAutoSave();
+    }
+
     // Xóa dòng
     function delRow(btn) {
       const tr = btn.closest('tr');
       const tbody = tr.parentElement;
+      const table = tbody.closest('table');
+      const tableId = table ? table.id : tbody.parentElement.id;
       tr.remove();
       // Đánh số lại STT nếu là bảng 1
-      if (tbody.parentElement.id === 'tableSec1') {
+      if (tableId === 'tableSec1') {
         Array.from(tbody.rows).forEach((r, idx) => {
           r.cells[0].innerText = idx + 1;
         });
         calcSec1();
+      } else if (tableId === 'tableSec4') {
+        calcSec4();
       }
       triggerAutoSave();
     }
@@ -2637,9 +2657,24 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       // Mục 4: Kế hoạch ngày mai
       const sec4Rows = [];
       document.querySelectorAll('#tableSec4 tbody tr').forEach(tr => {
-        const col1Name = tr.cells[0]?.innerHTML?.trim() || '';
+        const col1Td = tr.cells[0];
+        let col1Name = '';
+        if (col1Td) {
+          const clone = col1Td.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          col1Name = clone.innerHTML.trim();
+        }
         const col1Qty = tr.cells[1]?.innerHTML?.trim() || '0';
-        const col2Name = tr.cells[2]?.innerHTML?.trim() || '';
+
+        const col2Td = tr.cells[2];
+        let col2Name = '';
+        if (col2Td) {
+          const clone = col2Td.cloneNode(true);
+          const delBtn = clone.querySelector('.btn-del-row');
+          if (delBtn) delBtn.remove();
+          col2Name = clone.innerHTML.trim();
+        }
         const col2Qty = tr.cells[3]?.innerHTML?.trim() || '0';
         sec4Rows.push({ col1Name, col1Qty, col2Name, col2Qty });
       });
@@ -2827,7 +2862,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           tr.innerHTML = `
             <td class="text-left" contenteditable="true">${r.col1Name}</td>
             <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.col1Qty}</td>
-            <td class="text-left" contenteditable="true">${r.col2Name}</td>
+            <td class="text-left" contenteditable="true">${r.col2Name} <button class="btn-del-row" onclick="delRow(this)">×</button></td>
             <td class="text-center" contenteditable="true" oninput="calcSec4()">${r.col2Qty}</td>
           `;
           tbody4.appendChild(tr);
